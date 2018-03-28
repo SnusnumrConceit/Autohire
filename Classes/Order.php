@@ -75,7 +75,6 @@ class Order implements IOrder {
     {
         require_once '../DbConnect.php';
         $db = DbConnect();
-        #ДОПИСАТЬ ЗАПРОС
         $findOrderQuery = $db->prepare("SELECT ord.id, u.Login, concat(u.LName, ' ', U.FName, ' ', u.MName) AS User, m.Title AS Model, cb.Type, pr.Price FROM orders AS ord INNER JOIN users AS u ON ord.User_id = u.id INNER JOIN products AS pr ON ord.Product_id = pr.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id WHERE u.LName = ?");
         $findOrderQuery->execute(array($order));        
         $currentOrder = $findOrderQuery->fetchAll(PDO::FETCH_OBJ);        
@@ -150,7 +149,7 @@ interface IOrder {
 
     function CheckData($inputData);
 
-    function FindOrder($model);
+    function FindOrder($order);
 }
 
 ?>

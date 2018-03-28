@@ -1,6 +1,7 @@
 var btnEdit = $('.btn-warning'),
     btnDelete = $('.btn-danger'),
-    btnSubmit = $('#btnSubmit');
+    btnSubmit = $('#btnSubmit'),
+    btnFind = $('#btn-find-body');
 
 $('.create-body-container').css('display', 'none');
 
@@ -46,6 +47,15 @@ btnEdit.click(function () {
     }
 })
 
+btnFind.click(function () {  
+    var body = $('#body').val();
+    $.get('bodies.php', {body: body}, function (response) {  
+        if (response.length != 0) {
+            window.location.href = 'bodies.php?body=' + body;
+        }
+    })
+})
+
 btnDelete.click(function () {  
     for (var i = 0; i < btnDelete.length; i++) {
         if (event.target == btnDelete[i]) {
@@ -60,18 +70,7 @@ btnDelete.click(function () {
                 }
                 
             })
-            /*$.ajax({
-                type:'delete',
-                url:'options.php',
-                data: option_id,
-                success: function (response) { 
-                    if (response.length !=0) {
-                        alert(response);
-                    } else {
-                      window.location.reload();    
-                    } 
-                }
-            })*/
+            
         }
         
     }

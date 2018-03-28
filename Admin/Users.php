@@ -19,13 +19,10 @@
             echo('Ничего не пришло');
         }        
     }
+    #####_____ПОИСКОВАЯ VIEW________########
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($_GET['user'] ?? '') {
-            $inputData = $_GET['user'];            
-            require_once '../Classes/User.php';
-            $user = new User();
-            $findlessUsers = $user->FindUser($inputData);            
-            if ($findlessUsers) {                
+            $inputData = $_GET['user'];
                 print <<<USER
 <!DOCTYPE html>
 <html>
@@ -37,7 +34,10 @@
     </head>
     <body>
          <div class="container">
-            <button id="btn-open-create-user-container" class="btn btn-success">Добавить</button>
+            <div>
+                <button id="btn-open-create-user-container" class="btn btn-success">Добавить</button>
+                <a class="btn btn-default" href="admin.php">На главную</a>
+            </div>
             <div class="form-group create-user-container">
                 <form method="POST">
                     <div class="form-group">
@@ -65,13 +65,18 @@
             </div>
             <div class="find-user-container">                
                 <form method="GET">
-                    <input class="form-control" type="text" id="user" value="{$inputData}">
+                    <input class="form-control" type="text" id="user" value="{$inputData}" placeholder="Введите фамилию пользователя">
                     <button id="btn-find-user" class="btn btn-primary">Найти</button>
                 </form>
             </div>
             <div>
                     <h2>Пользователи</h2>
-                        <table class="table table-bordered">
+USER;
+                    require_once '../Classes/User.php';
+                    $user = new User();
+                    $findlessUsers = $user->FindUser($inputData);            
+                    if ($findlessUsers) {       
+                        print "<table class=\"table table-bordered\">
                                         <thead>
                                             <th>id</th>
                                             <th>Логин</th>
@@ -80,8 +85,8 @@
                                             <th>Отчество</th>
                                             <th>Операции</th>
                                         </thead>
-                                        <tbody>
-USER;
+                                        <tbody>";
+
                     for ($i=0; $i < count($findlessUsers); $i++) { 
                         print "<tr>
                                 <td>{$findlessUsers[$i]->id}</td>
@@ -100,9 +105,18 @@ USER;
         <script src=\"../Scripts/users_scripts.js\"></script>      
     </body>
 </html>";
+            } else {
+                print "<div>По запросу <i>{$inputData}</i> не найдено ни одного пользователя</div>
+                </div>
+            </div>
+        </div>  
+        <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>
+        <script src=\"../Scripts/users_scripts.js\"></script>      
+    </body>
+</html>";
             }
         }         
-    
+    #####_____ОСНОВНАЯ VIEW________########
     else {
 print <<<USERS
 <!DOCTYPE html>
@@ -115,7 +129,10 @@ print <<<USERS
     </head>
     <body>
          <div class="container">
-            <button id="btn-open-create-user-container" class="btn btn-success">Добавить</button>
+            <div>
+                <button id="btn-open-create-user-container" class="btn btn-success">Добавить</button>
+                <a class="btn btn-default" href="admin.php">На главную</a>
+            </div>
             <div class="form-group create-user-container">
                 <form method="POST">
                     <div class="form-group">
@@ -143,7 +160,7 @@ print <<<USERS
             </div>
             <div class="find-user-container">                
                 <form method="GET">
-                    <input class="form-control" type="text" id="user">
+                    <input class="form-control" type="text" id="user" placeholder="Введите фамилию пользователя">
                     <button id="btn-find-user" class="btn btn-primary">Найти</button>
                 </form>
             </div>

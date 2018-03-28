@@ -1,6 +1,7 @@
 var btnEdit = $('.btn-warning'),
     btnDelete = $('.btn-danger'),
-    btnSubmit = $('#btnSubmit');
+    btnSubmit = $('#btnSubmit'),
+    btnFind = $('#btn-find-order');
 
 $('.create-order-container').css('display', 'none');
 
@@ -29,6 +30,15 @@ btnSubmit.click(function () {
         this.car = car
      }
  })
+
+btnFind.click(function () {  
+    var order = $('#order').val();
+    $.get('orders.php', {order: order}, function (response) {  
+        if (response.length != 0) {
+            window.location.href = 'orders.php?order=' + order;
+        }
+    })
+})
 
 btnDelete.click(function () {  
     for (var i = 0; i < btnDelete.length; i++) {

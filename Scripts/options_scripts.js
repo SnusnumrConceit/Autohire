@@ -1,6 +1,13 @@
 var btnEdit = $('.btn-warning'),
     btnDelete = $('.btn-danger'),
-    btnSubmit = $('#btnSubmit');
+    btnSubmit = $('#btnSubmit'),
+    btnFind = $('#btn-find-option');
+
+$('.create-option-container').css('display', 'none');
+
+$('#btn-open-create-option-container').click(function () { 
+    $('.create-option-container').slideToggle();
+ })
 
 btnSubmit.click(function () {  
     var title = $('#title').val();
@@ -49,6 +56,15 @@ btnEdit.click(function () {
     }
 })
 
+btnFind.click(function () {  
+    var option = $('#option').val();
+    $.get('options.php', {option: option}, function (response) {  
+        if (response.length != 0) {
+            window.location.href = 'options.php?option=' + option;
+        }
+    })
+})
+
 btnDelete.click(function () {  
     for (var i = 0; i < btnDelete.length; i++) {
         if (event.target == btnDelete[i]) {
@@ -63,18 +79,7 @@ btnDelete.click(function () {
                 }
                 
             })
-            /*$.ajax({
-                type:'delete',
-                url:'options.php',
-                data: option_id,
-                success: function (response) { 
-                    if (response.length !=0) {
-                        alert(response);
-                    } else {
-                      window.location.reload();    
-                    } 
-                }
-            })*/
+            
         }
         
     }

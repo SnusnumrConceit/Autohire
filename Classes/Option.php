@@ -29,6 +29,20 @@ class Option implements IOption{
         
     }
 
+    public function FindOption($option)
+    {
+        require_once '../DbConnect.php';
+        $db = DbConnect();
+        $findOptionQuery = $db->prepare('SELECT * FROM options WHERE Title = ?');
+        $findOptionQuery->execute(array($option));        
+        $currentProduct = $findOptionQuery->fetchAll(PDO::FETCH_OBJ);        
+        if (count($currentProduct) != 0) {
+            return $currentProduct;
+        } else {
+            return false;
+        }        
+    }
+
     public function SetData($inputData, $option)
     {
         $option->id = uniqid();
@@ -145,6 +159,8 @@ interface IOption {
     function CheckData($inputData);
 
     function ShowOptions();
+
+    function FindOption($option);
     
 }
 

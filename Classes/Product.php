@@ -80,12 +80,12 @@ class Product implements IProduct {
         }
     }
 
-    public function FindProduct($model)
+    public function FindProduct($product)
     {
         require_once '../DbConnect.php';
         $db = DbConnect();
         $findProductQuery = $db->prepare('SELECT pr.id, b.Title AS Brand, m.Title AS Model, pr.Price, pr.Photo, cb.Type, cb.Oil, cb.Transmission, cb.Control  FROM products AS pr INNER JOIN brands AS b ON pr.Brand_id = b.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id WHERE m.Title = ?');
-        $findProductQuery->execute(array($model));        
+        $findProductQuery->execute(array($product));        
         $currentProduct = $findProductQuery->fetchAll(PDO::FETCH_OBJ);        
         if (count($currentProduct) != 0) {
             return $currentProduct;

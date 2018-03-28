@@ -26,6 +26,20 @@ public function CreateBody($carBody)
         $deleteBodyQuery->execute(array($id));        
     }
 
+    public function FindBody($body)
+    {
+        require_once '../DbConnect.php';
+        $db = DbConnect();
+        $findBodyQuery = $db->prepare("SELECT * FROM carbodies WHERE Type = ?");
+        $findBodyQuery->execute(array($body));        
+        $currentBody = $findBodyQuery->fetchAll(PDO::FETCH_OBJ);        
+        if (count($currentBody) != 0) {
+            return $currentBody;
+        } else {
+            return false;
+        }        
+    }
+
     public function GetBody($id)
     {
         require_once '../../DbConnect.php';
@@ -176,6 +190,8 @@ interface ICarBody {
     function CheckData($inputData);
 
     function ShowBodies();
+
+    function FindBody($carBody);
 }
     
 ?>

@@ -74,6 +74,20 @@ class Model implements IModel {
         $deleteModelQuery->execute(array($id));
     }
 
+    public function FindModel($model)
+    {
+        require_once '../DbConnect.php';
+        $db = DbConnect();
+        $findModelQuery = $db->prepare('SELECT * FROM models WHERE Title = ?');
+        $findModelQuery->execute(array($model));        
+        $currentProduct = $findModelQuery->fetchAll(PDO::FETCH_OBJ);        
+        if (count($currentProduct) != 0) {
+            return $currentProduct;
+        } else {
+            return false;
+        }        
+    }
+
     public function GetModel($id)
     {        
         require_once '../../DbConnect.php';
@@ -162,7 +176,7 @@ interface IModel {
     #присвоение корректных пришедших с клиента данных экземпляру класса для удобства работы
     function SetData($inputData, $model);
     
-    
+    function FindModel($model);
 }
 
 ?>

@@ -1,6 +1,7 @@
 var btnEdit = $('.btn-warning'),
     btnDelete = $('.btn-danger'),
-    btnSubmit = $('#btnSubmit');
+    btnSubmit = $('#btnSubmit'),
+    btnFind = $('#btn-find-brand');
 
 $('.create-brand-container').css('display', 'none');
 $('#btn-open-create-brand-container').click(function () {  
@@ -51,6 +52,15 @@ btnEdit.click(function () {
         }
         
     }
+})
+
+btnFind.click(function () {  
+    var brand = $('#brand').val();
+    $.get('brands.php', {brand: brand}, function (response) {  
+        if (response.length != 0) {
+            window.location.href = 'brands.php?brand=' + brand;
+        }
+    })
 })
 
 btnDelete.click(function () {  

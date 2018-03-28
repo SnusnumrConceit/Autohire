@@ -20,8 +20,10 @@
             echo('Ничего не пришло');
         }        
     }
+    #####_____ПОИСКОВАЯ VIEW________########
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($_GET['product'] ?? '') {
+            $inputData = $_GET['product'];
 print <<<PRODUCTS
 <!DOCTYPE html>
 <html>
@@ -33,7 +35,10 @@ print <<<PRODUCTS
     </head>
     <body>
          <div class="container">
-            <button id="btn-open-create-product-container" class="btn btn-success">Добавить</button>
+            <div>
+                <button id="btn-open-create-product-container" class="btn btn-success">Добавить</button>
+                <a class="btn btn-default" href="admin.php">На главную</a>
+            </div>
             <div class="form-group create-product-container">
                 <form method="POST" enctype="multipart/form-data">
                     <div class="form-group">
@@ -100,14 +105,13 @@ PRODUCTS;
             </div>
             <div class=\"find-product-container\">                
                 <form method=\"GET\">
-                    <input class=\"form-control\" type=\"text\" id=\"product\">
+                    <input class=\"form-control\" type=\"text\" id=\"product\" placeholder=\"Введите модель автомобиля\" value=\"{$inputData}\">
                     <button id=\"btn-find-product\" class=\"btn btn-primary\">Найти</button>
                 </form>
             </div>
             <div>
                 <h2>Автомобильный ряд</h2>";
-        
-            $inputData = $_GET['product'];            
+
             require_once '../Classes/Product.php';
             $product = new Product();
             $findlessProducts = $product->FindProduct($inputData);            
@@ -161,7 +165,7 @@ PRODUCTS;
 
 
 
-#ОБЫЧНАЯ VIEW
+#####_____ОСНОВНАЯ VIEW________########
 print <<<PRODUCTS
 <!DOCTYPE html>
 <html>
@@ -173,7 +177,10 @@ print <<<PRODUCTS
     </head>
     <body>
          <div class="container">
-            <button id="btn-open-create-product-container" class="btn btn-success">Добавить</button>
+            <div>
+                <button id="btn-open-create-product-container" class="btn btn-success">Добавить</button>
+                <a class="btn btn-default" href="admin.php">На главную</a>
+            </div>
             <div class="form-group create-product-container">
                 <form method="POST" enctype="multipart/form-data">
                     <div class="form-group">
@@ -255,7 +262,7 @@ PRODUCTS;
             </div>
             <div class=\"find-product-container\">                
                 <form method=\"GET\">
-                    <input class=\"form-control\" type=\"text\" id=\"product\">
+                    <input class=\"form-control\" type=\"text\" id=\"product\" placeholder=\"Введите модель автомобиля\">
                     <button id=\"btn-find-product\" class=\"btn btn-primary\">Найти</button>
                 </form>
             </div>

@@ -1,6 +1,13 @@
 var btnEdit = $('.btn-warning'),
     btnDelete = $('.btn-danger'),
-    btnSubmit = $('#btnSubmit');
+    btnSubmit = $('#btnSubmit'),
+    btnFind = $('#btn-find-model');
+
+$('.create-model-container').css('display', 'none');
+
+$('#btn-open-create-model-container').click(function () { 
+    $('.create-model-container').slideToggle();
+ })
 
 btnSubmit.click(function () {  
     var title = $('#title').val();
@@ -49,6 +56,15 @@ btnEdit.click(function () {
     }
 })
 
+btnFind.click(function () {  
+    var model = $('#model').val();
+    $.get('models.php', {model: model}, function (response) {  
+        if (response.length != 0) {
+            window.location.href = 'models.php?model=' + model;
+        }
+    })
+})
+
 btnDelete.click(function () {  
     for (var i = 0; i < btnDelete.length; i++) {
         if (event.target == btnDelete[i]) {
@@ -62,19 +78,7 @@ btnDelete.click(function () {
                     window.location.reload();     
                 }
                 
-            })
-            /*$.ajax({
-                type:'delete',
-                url:'models.php',
-                data: model_id,
-                success: function (response) { 
-                    if (response.length !=0) {
-                        alert(response);
-                    } else {
-                      window.location.reload();    
-                    } 
-                }
-            })*/
+            })            
         }
         
     }

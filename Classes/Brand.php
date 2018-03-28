@@ -28,6 +28,20 @@ class Brand implements IBrand{
         }
     }
 
+    public function FindBrand($brand)
+    {
+        require_once '../DbConnect.php';
+        $db = DbConnect();
+        $findBrandQuery = $db->prepare('SELECT * FROM brands WHERE Title = ?');
+        $findBrandQuery->execute(array($brand));        
+        $currentProduct = $findBrandQuery->fetchAll(PDO::FETCH_OBJ);        
+        if (count($currentProduct) != 0) {
+            return $currentProduct;
+        } else {
+            return false;
+        }        
+    }
+
     protected function CheckDublicates($db, $brand, $pointer)
     {
         if ($pointer === 'create') {
@@ -145,6 +159,8 @@ interface IBrand {
     function CheckData($inputData);
 
     function ShowBrands();
+
+    function FindBrand($brand);
     
 }
 
