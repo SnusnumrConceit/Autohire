@@ -14,7 +14,11 @@ var btnEdit = $('.btn-warning'),
         model = $('#model').val(),
         body = $('#car-body').val(),
         price = $('#price').val(),
-        product = new Product(photo, brand, model, body, price),
+        options = [];
+        $(':checkbox:checked').each(function () {  
+            options.push(this.value);
+        })
+        product = new Product(photo, brand, model, body, price, options),
         formData = new FormData();
         
         if (CheckData(product)) {
@@ -39,12 +43,13 @@ var btnEdit = $('.btn-warning'),
             )
         }
 
-    function Product(photo, brand, model, body, price) { 
+    function Product(photo, brand, model, body, price, options) { 
         this.photo = photo,
         this.brand = brand,
         this.model = model,
         this.body = body,
-        this.price = price
+        this.price = price,
+        this.options = options;
      }
     function CheckData(product) {
         try {            
@@ -138,18 +143,6 @@ btnDelete.click(function () {
                 }
                 
             })
-            /*$.ajax({
-                type:'delete',
-                url:'options.php',
-                data: option_id,
-                success: function (response) { 
-                    if (response.length !=0) {
-                        alert(response);
-                    } else {
-                      window.location.reload();    
-                    } 
-                }
-            })*/
         }
         
     }

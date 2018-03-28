@@ -80,7 +80,21 @@ PRODUCTS;
                         print "<option value=\"{$carBodies[$i]->id}\">{$carBodies[$i]->Type}</option>";
                     }
                     print   "</select>
-                    </div>
+                    </div>";
+                     print "<div class=\"form-group\">";
+                    require_once '../Classes/Option.php';
+                    $option = new Option();
+                    $options = $option->ShowOptions();
+                    $optionsLength = count($options);
+                    if ($options) {
+                        for ($i=0; $i < $optionsLength; $i++) { 
+                            print "<label>{$options[$i]->Title}</label>
+                                    <input type=\"checkbox\" value=\"{$options[$i]->id}\">";
+                        }
+                    } else {
+                        echo("<div>Для добавления дополнительных опций в автомобильный ряд сначала добавьте данные опции в разделе <a href='options.php'><strong>Опции</strong></a></div>");
+                    }
+                    print "</div>
                     <button type=\"button\" id=\"btnSubmit\" class=\"btn btn-success\">Отправить</button>    
                 </form>
             </div>
@@ -144,6 +158,9 @@ PRODUCTS;
         }         
     
     else {
+
+
+
 #ОБЫЧНАЯ VIEW
 print <<<PRODUCTS
 <!DOCTYPE html>
@@ -216,8 +233,23 @@ PRODUCTS;
                     } else {
                         echo("<div>Для добавления автомобиля в автомобильный ряд сначала добавьте кузов автомобиля в разделе <a href='bodies.php'><strong>Кузовы</strong></a></div>");
                     }
-                    print "</select>
-                    </div>
+                    
+                    print "</div>
+                            <div class=\"form-group\">";
+                    require_once '../Classes/Option.php';
+                    $option = new Option();
+                    $options = $option->ShowOptions();
+                    $optionsLength = count($options);
+                    if ($options) {
+                        for ($i=0; $i < $optionsLength; $i++) { 
+                            print "<label>{$options[$i]->Title}</label>
+                                    <input type=\"checkbox\" value=\"{$options[$i]->id}\">";
+                        }
+                    } else {
+                        echo("<div>Для добавления дополнительных опций в автомобильный ряд сначала добавьте данные опции в разделе <a href='options.php'><strong>Опции</strong></a></div>");
+                    }
+                    
+                    print "</div>
                     <button type=\"button\" id=\"btnSubmit\" class=\"btn btn-success\">Отправить</button>    
                 </form>
             </div>
@@ -245,21 +277,36 @@ PRODUCTS;
                                         <th>Коробка передач</th>
                                         <th>Топливо</th>
                                         <th>Привод</th>
+                                        <th>Опции</th>
                                         <th>Операции</th>
                                     </thead>
                                     <tbody>";
+                            require_once '../wideimage/lib/wideimage.php';
                             for ($i=0; $i < count($result); $i++) { 
+                                $img = base64_decode($result[$i]->Photo);
+                                $img = WideImage::load($img);
+                                $img = $img->resize(180, 120);
+                                $img = base64_encode($img);
                                 print "<tr>
                                             <td>{$result[$i]->id}</td>
-                                            <td><img width=\"180\" height=\"120\" src=\"data:image/jpg;base64,{$result[$i]->Photo}\"></td>
+                                            <td><img src=\"data:image/jpg;base64,{$img}\"></td>
                                             <td>{$result[$i]->Brand}</td>                                            
                                             <td>{$result[$i]->Model}</td>
                                             <td>{$result[$i]->Price}</td>
                                             <td>{$result[$i]->Type}</td>
                                             <td>{$result[$i]->Transmission}</td>
                                             <td>{$result[$i]->Oil}</td>
-                                            <td>{$result[$i]->Control}</td>
-                                            <td><button class=\"btn btn-warning\">Изменить</button><button class=\"btn btn-danger\">Удалить</button></td>
+                                            <td>{$result[$i]->Control}</td>";
+                                if ($result[$i]->Options ?? '') {
+                                   print "<td><ul>";
+                                   for ($j=0; $j < count($result[$i]->Options); $j++) { 
+                                        print "<li>{$result[$i]->Options[$j]->Title}</li>";
+                                    }
+                                    print "</ul></td>";
+                                } else {
+                                    print "<td></td>";
+                                }
+                                    print "<td><button class=\"btn btn-warning\">Изменить</button><button class=\"btn btn-danger\">Удалить</button></td>
                                         </tr>";
                             }
                         } else {

@@ -6,7 +6,16 @@ class Product implements IProduct {
         $db = DbConnect();
         if ($this->CheckDublicates($db, $product, 'create')) {
             $createProductQuery = $db->prepare("INSERT INTO products VALUES (?, ?, ?, ?, ?, ?)");
-            $createProductQuery->execute(array($product->id, $product->brand, $product->model, $product->price, $product->photo, $product->body));    
+            $createProductQuery->execute(array($product->id, $product->brand, $product->model, $product->price, $product->photo, $product->body));
+            if ($product->options ?? '') {
+                $clearCharacteristics = $db->prepare("DELETE FROM characteristics WHERE Product_id = ?");
+                $clearCharacteristics->execute(array($product->id));
+                $options = count($product->options);
+                $createCharacteritics = $db->prepare("INSERT INTO characteristics VALUES (?,?)");
+                for ($i=0; $i < $options; $i++) { 
+                    $createCharacteritics->execute(array($product->id, $product->options[$i]));
+                }
+            }
         }
     }
 
@@ -92,8 +101,16 @@ class Product implements IProduct {
         $selectProductsQuery = $db->prepare("SELECT pr.id, b.Title AS Brand, m.Title AS Model, pr.Price, pr.Photo, cb.Type, cb.Oil, cb.Transmission, cb.Control  FROM products AS pr INNER JOIN brands AS b ON pr.Brand_id = b.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id");
         $selectProductsQuery->execute();
         $products = $selectProductsQuery->fetchAll(PDO::FETCH_OBJ);
+        $selectOptionsQuery = $db->prepare("SELECT opt.Title FROM characteristics AS chr INNER JOIN options AS opt ON opt.id = chr.Option_id WHERE chr.Product_id = ?");
         $productsLength = count($products);
         if ($productsLength !=0) {
+            for ($i=0; $i < $productsLength; $i++) { 
+                $selectOptionsQuery->execute(array($products[$i]->id));
+                $options = $selectOptionsQuery->fetchAll(PDO::FETCH_OBJ);
+                if ($options) {
+                    $products[$i]->Options = $options;
+                }
+            }
             return $products;
         } else {            
             return false; 
@@ -109,12 +126,12 @@ class Product implements IProduct {
         $product->price = $inputData->price;
         $product->photo = base64_encode(file_get_contents($photo['tmp_name']));
         $product->body = $inputData->body;
+        $product->options = $inputData->options;
         return $product;    
     }
 
-    public function CheckData($inputData, $photo)
+    public function CheckData($product, $photo)
     {
-        $product = $inputData;
         try {
             if (($photo ?? '') && ($product->brand ?? '') &&($product->model ?? '') &&($product->body ?? '') &&($product->price ?? '')) {
                 if (is_uploaded_file($photo['tmp_name'])) {
