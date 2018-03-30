@@ -1,16 +1,20 @@
 <?php
-
-//здесь будем мутить тему с куки
-
-//напиши стили для нав-табов: сам текст красный на белом фоне, при :hover и :active - красный фон, белые буквы
+  if ($_COOKIE['Account'] ?? '') {
+    foreach ($_COOKIE['Account'] as $key => $value) {
+      $id = $key;
+    }
+    require_once 'Classes/User.php';
+    $user = new User();
+    $currentUser = $user->GetUser($id);
+  }
 ?>
 <header class="header">
     <nav class="navbar navbar-expand-sm bg-light">
         <ul class="navbar-nav">
         <?php                        
-            /*if (isset($current_user)) {
+            if ($currentUser[0] ?? '') {
               print <<<LOGGED_PANEL
-                <li class="nav-item"><a class="nav-link" href="Index/user.php?user={$student}">$current_user->Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="cabinet.php?user={$currentUser[0]->id}">{$currentUser[0]->Login}</a></li>
                 <li class="nav-item"><a class="nav-link" href="Index/Logout.php">Выйти</a></li>    
 LOGGED_PANEL;
             } else {
@@ -18,12 +22,8 @@ LOGGED_PANEL;
                 <li class="nav-item" data-toggle="modal" data-target="#loginModal"><a class="nav-link" href="#">Войти</a></li>
                 <li class="nav-item" data-toggle="modal" data-target="#regModal"><a class="nav-link" href="#">Регистрация</a></li>
 UNLOGGED_PANEL;
-            }         
-         */   
+            }  
         ?>
-          <li class="nav-item" data-toggle="modal" data-target="#loginModal"><a class="nav-link" href="#">Войти</a></li>
-          <li class="nav-item" data-toggle="modal" data-target="#regModal"><a class="nav-link" href="#">Регистрация</a></li>
-        </ul>
     </nav>
         <div class="logo"><img src="сюда воткнёшь ссылку на лого" alt="АвтоПрокат"></div>
     

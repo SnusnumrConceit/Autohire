@@ -1,3 +1,8 @@
+<?php
+    session_start();
+    if ($_SESSION ?? '') {
+        if ($_SESSION['name'] === 'admin') {
+print <<<ADMIN
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -41,3 +46,11 @@
         </div>
     </body>
 </html>
+ADMIN;
+    } else {
+        header('location: ../enter.php');
+    }
+} else {
+    header('location: ../enter.php');
+}
+?>

@@ -29,7 +29,11 @@ class User implements IUser{
 
     public function GetUser($id)
     {
-        require_once '../../DbConnect.php';
+        if (substr($_SERVER['HTTP_REFERER'], -9, 9) === 'index.php') {
+            require_once 'DbConnect.php';    
+        } else {//if (substr($_SERVER['HTTP_REFERER'], -12, 12) === 'userinfo.php') {
+            require_once '../../DbConnect.php';
+        }
         $db = DbConnect();
         $getUserQuery = $db->prepare('SELECT * FROM users WHERE id = ?');
         $getUserQuery->execute(array($id));
@@ -70,7 +74,8 @@ class User implements IUser{
     {
         $user->id = uniqid();
         $user->login = $inputData->login;
-        $user->password = $inputData->pass;
+        $user->password = password_hash($inputData->pass, PASSWORD_DEFAULT);
+        ;;
         $user->lastName = $inputData->lastName;
         $user->firstName = $inputData->firstName;
         $user->middleName = $inputData->middleName;
