@@ -13,21 +13,53 @@ $('#btn-open-create-order-container').click(function () {
 
 btnSubmit.click(function () { 
     var user = $('#user').val(),
-        car = $('#car').val(),
-        order = new Order(user, car);
-        order = JSON.stringify(order);
-        $.post('orders.php', {order: order}, function (response) { 
-            if (response.length != 0) {
-                alert(response);
-            } else {
-                window.location.reload();                
-            }
-         })
-    
+        product_id = $('#car').val(),
+        hours = $('#hours').val(),
+        order = new Order(user, product_id, hours);
+        if (CheckData(order)) {
+            order = JSON.stringify(order);
+            $.post('orders.php', {order: order}, function (response) { 
+                if (response.length != 0) {
+                    alert(response);
+                } else {
+                    window.location.reload();                
+                }
+            })
+        }
+        
 
-    function Order(user, car) { 
+    function Order(user, product_id, hours) { 
         this.user = user,
-        this.car = car
+        this.product_id = product_id,
+        this.hours = hours
+     }
+
+     function CheckData(order) {
+         try {
+             if (order.hours !== null & order.hours !== undefined && order.hours.length != 0) {
+                 if (order.hours.length <= 2) {
+                     if (!isNaN(order.hours)) {
+                         return true;
+                     } else {
+                         throw new Error('Wrong Data Error');
+                     }
+                 } else {
+                     throw new Error('Length Data Error');
+                 }
+             } else {
+                 throw new Error('Empty Data Error');
+             }
+         } catch (error) {
+             if (error.message === 'Empty Data Error') {
+                 alert('Вы не указали количество часов!');
+             }
+             if (error.message === 'Length Data Error') {
+                 alert('Количество часов не может превышать 72х часов!');
+             }
+             if (error.message === 'Wrong Data Error') {
+                 alert('Поле количество часов должно состоять из цифр!');
+             }
+         }
      }
  })
 

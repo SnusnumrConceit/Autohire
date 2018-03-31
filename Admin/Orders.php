@@ -6,7 +6,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $order = new Order();
             if ($order->CheckData($inputData)) {
                 $order = $order->SetData($inputData, $order);
-                $order->CreateOrder($order);    
+                require_once '../DbConnect.php';
+                $db = DbConnect();
+                $order->CreateOrder($order, $db);    
             }            
         } 
         elseif ($_POST['id'] ?? '') {
@@ -74,6 +76,10 @@ ORDERS;
                 print "<div>Для оформления заказа сначала добавьте автомобиль в разделе <a href='products.php'><strong>Автомобили</strong></a></div>";
             }
             print "</div>
+                <div class=\"form-group\">
+                    <label for=\"hours\">Количество часов</label>
+                    <input class=\"form-control\" id=\"hours\">
+                </div>
                 <button type=\"button\" id=\"btnSubmit\" class=\"btn btn-success\">Отправить</button>    
                 </form>
             </div>
@@ -185,6 +191,10 @@ ORDERS;
                 print "<div>Для оформления заказа сначала добавьте автомобиль в разделе <a href='products.php'><strong>Автомобили</strong></a></div>";
             }
             print "</div>
+                <div class=\"form-group\">
+                    <label for=\"hours\">Количество часов</label>
+                    <input class=\"form-control\" id=\"hours\">
+                </div>
                 <button type=\"button\" id=\"btnSubmit\" class=\"btn btn-success\">Отправить</button>    
                 </form>
             </div>
@@ -209,6 +219,7 @@ ORDERS;
                                             <th>ФИО</th>
                                             <th>Модель</th>
                                             <th>Кузов</th>
+                                            <th>Время</th>
                                             <th>Цена</th>
                                             <th>Операции</th>
                                         </thead>
@@ -220,6 +231,7 @@ ORDERS;
                                     <td>{$orders[$i]->User}</td>
                                     <td>{$orders[$i]->Model}</td>
                                     <td>{$orders[$i]->Type}</td>
+                                    <td>{$orders[$i]->Hours}</td>
                                     <td>{$orders[$i]->Price}</td>
                                     <td><button class=\"btn btn-danger\">Удалить</button></td>
                                 </tr>";

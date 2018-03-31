@@ -1,19 +1,17 @@
 <?php
 class Order implements IOrder {
-    public function CreateOrder($order)
+    public function CreateOrder($order, $db)
     {
-        require_once '../DbConnect.php';
         $db = DbConnect();
-        if ($this->CheckDublicates($db, $order, 'create')) {
-            $createOrderQuery = $db->prepare("INSERT INTO orders VALUES (?, ?, ?)");
-            $createOrderQuery->execute(array($order->id, $order->user, $order->car));    
+        if ($this->CheckDublicates($db, $order)) {
+            $createOrderQuery = $db->prepare("INSERT INTO orders VALUES (?, ?, ?, ?)");
+            $createOrderQuery->execute(array($order->id, $order->user, $order->product_id, $order->hours));    
         }
     }
 
     public function GetOrder($id)
     {
         require_once '../DbConnect.php';
-        $db = DbConnect();
         $selectOrderQuery = $db->prepare("SELECT * FROM orders WHERE id = ?");
         $selectOrderQuery->execute(array($id));
         $order = $selectOrderQuery->fetchAll(PDO::FETCH_OBJ);
@@ -33,42 +31,27 @@ class Order implements IOrder {
         $deleteOrderQuery->execute(array($id));
     }
 
-    public function UpdateOrder($order)
-    {
-        require_once '../DbConnect.php';
-        $db = DbConnect();
-        //дописать логику для варианта без фотки
-        if ($this->CheckDublicates($db, $order, 'update')) {
-            $updateOrderQuery = $db->prepare('UPDATE orders SET User_id = ? AND Product_id = ? WHERE id = ?');
-            $updateOrderQuery->execute(array($order->user, $order->car, $order->id));
-        }
         
-    }
-    
-    protected function CheckDublicates($db, $order, $pointer)
+    protected function CheckDublicates($db, $order)
     {
-        if ($pointer === 'create') {
-            $getOrderQuery = $db->prepare("SELECT * from orders WHERE User_id = ? AND Product_id = ?");
-            $getOrderQuery->execute(array($order->user, $order->car));
-            $currentOrder = $getOrderQuery->fetchAll(PDO::FETCH_OBJ);
-            if (count($currentOrder) == 0) {                
-                return true;
-            } else {
-                echo ('Такой заказ уже существует');
+        $getOrderQuery = $db->prepare("SELECT * from orders WHERE User_id = ? AND Product_id = ?");
+        $getOrderQuery->execute(array($order->user, $order->product_id));
+        $currentOrder = $getOrderQuery->fetchAll();
+        if (count($currentOrder) == 0) {                
+            $getOrderQuery = $db->prepare("SELECT * from orders WHERE User_id = ?");
+            $getOrderQuery->execute(array($order->user));
+            $currentOrder = $getOrderQuery->fetchAll();
+            if(count($currentOrder) >= 1) {
+                echo ('Вы не можете арендовать более одного автомобиля!');
                 return false;
-            }            
-        }
-        elseif ($pointer === 'update') {
-            $getOrderQuery = $db->prepare("SELECT * from orders WHERE User_id = ? AND Product_id = ?");
-            $getOrderQuery->execute(array($order->user, $order->car));
-            $currentOrder = $getOrderQuery->fetchAll(PDO::FETCH_OBJ);
-            if (count($currentOrder) == 0 || count($currentOrder) == 1) {
-                return true;
             } else {
-                echo ('Такой заказ уже существует');
-                return false;
-            }            
-        }
+                return true;
+            }
+        } else {
+            echo ('Такой заказ уже существует!');
+            return false;
+        }            
+        
     }
 
     public function FindOrder($order)
@@ -90,7 +73,7 @@ class Order implements IOrder {
         require_once '../DbConnect.php';
         $db = DbConnect();
         #закончить заказ до конца
-        $selectOrdersQuery = $db->prepare("SELECT ord.id, u.Login, concat(u.LName, ' ', U.FName, ' ', u.MName) AS User, m.Title AS Model, cb.Type, pr.Price FROM orders AS ord INNER JOIN users AS u ON ord.User_id = u.id INNER JOIN products AS pr ON ord.Product_id = pr.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id");
+        $selectOrdersQuery = $db->prepare("SELECT ord.id, u.Login, concat(u.LName, ' ', U.FName, ' ', u.MName) AS User, m.Title AS Model, cb.Type, pr.Price, ord.Hours FROM orders AS ord INNER JOIN users AS u ON ord.User_id = u.id INNER JOIN products AS pr ON ord.Product_id = pr.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id");
         $selectOrdersQuery->execute();
         $orders = $selectOrdersQuery->fetchAll(PDO::FETCH_OBJ);
         $ordersLength = count($orders);
@@ -106,27 +89,48 @@ class Order implements IOrder {
     {
         $order->id = uniqid();
         $order->user = $inputData->user;
-        $order->car = $inputData->car;        
+        $order->product_id = $inputData->product_id;  
+        $order->hours = $inputData->hours;     
         return $order;    
     }
 
     public function CheckData($order)
     {
         try {
-            if (($order->user ?? '') && ($order->car ?? '')) {
-                return true;
+            if (($order->user ?? '') && ($order->product_id ?? '') && ($order->hours ?? '')) {
+                if (is_numeric($order->hours)) {
+                    if (strlen($order->hours) <= 2) {
+                        return true;
+                    } else {
+                        throw new Exception("Length Data Error", 1);
+                    }
+                } else {
+                    throw new Exception("Wrong Data Error", 1);
+                }
+                
             } else {
-                throw new Exception("Wrong Data Error", 1);
+                throw new Exception("Empty Data Error", 1);
             }
             
         } catch (Exception $error) {    
-            if ($error->getMessage() === 'Wrong Data Error') {
+            if ($error->getMessage() === 'Empty Data Error') {
                 if (!($order->user ?? '')) {
                     echo("Вы не выбрали пользователя, на которого нужно арендовать автомобиль!\n");
                 }
-                if (!($order->car ?? '')) {
+                if (!($order->product_id ?? '')) {
                     echo("Вы не выбрали автомобиль, которую нужно дать в аренду!\n");
                 }
+                if (!($order->hours ?? '')) {
+                    echo("Вы не указали количество часов!\n");
+                }
+            }
+
+            if ($error->getMessage() === 'Length Data Error') {
+                echo("Количество часов не может превышать 72х часов!");
+            }
+
+            if ($error->getMessage() === 'Wrong Data Error') {
+                echo('Поле количество часов должно состоять из цифр!');
             }
         }
 
@@ -135,13 +139,11 @@ class Order implements IOrder {
 }
 
 interface IOrder {
-    function CreateOrder($order);
+    function CreateOrder($order, $db);
     
     function GetOrder($id);
 
     function DeleteOrder($id);
-
-    function UpdateOrder($order);
 
     function ShowOrders();
 

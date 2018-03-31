@@ -133,7 +133,7 @@ PRODUCTS;
                     for ($i=0; $i < count($findlessProducts); $i++) { 
                         print "<tr>
                                     <td>{$findlessProducts[$i]->id}</td>
-                                    <td><img width=\"180\" height=\"120\" src=\"data:image/jpg;base64,{$findlessProducts[$i]->Photo}\"></td>
+                                    <td><img src=\"data:image/jpg;base64,{$findlessProducts[$i]->Photo}\"></td>
                                     <td>{$findlessProducts[$i]->Brand}</td>                                            
                                     <td>{$findlessProducts[$i]->Model}</td>
                                     <td>{$findlessProducts[$i]->Price}</td>

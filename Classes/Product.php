@@ -21,16 +21,26 @@ class Product implements IProduct {
 
     public function GetProduct($id)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
-        $selectProductQuery = $db->prepare("SELECT * FROM products WHERE id = ?");
+        $selectProductQuery = $db->prepare("SELECT pr.id, b.Title AS Brand, m.Title AS Model, pr.Price, pr.Photo, cb.Type, cb.Oil, cb.Transmission, cb.Control  FROM products AS pr INNER JOIN brands AS b ON pr.Brand_id = b.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id WHERE pr.id = ?");
         $selectProductQuery->execute(array($id));
         $product = $selectProductQuery->fetchAll(PDO::FETCH_OBJ);
-        if (count($selectProductQuery) == 1) {
-            return $product;
-        } else {
-            echo('Возникла ошибка. Повторите позднее');
-            return false;
+        if ($product) {
+            $selectOptionsQuery = $db->prepare("SELECT opt.Title FROM characteristics AS chr INNER JOIN options AS opt ON opt.id = chr.Option_id WHERE chr.Product_id = ?");
+            $productsLength = count($product);
+            if ($productsLength == 1) {
+                for ($i=0; $i < $productsLength; $i++) { 
+                    $selectOptionsQuery->execute(array($product[$i]->id));
+                    $options = $selectOptionsQuery->fetchAll(PDO::FETCH_OBJ);
+                    if ($options) {
+                        $product[$i]->Options = $options;
+                    }
+                }
+                return $product;
+            }    
+        } else {            
+            return false; 
         }
     }
 

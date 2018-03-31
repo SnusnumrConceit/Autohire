@@ -29,11 +29,12 @@ class User implements IUser{
 
     public function GetUser($id)
     {
-        if (substr($_SERVER['HTTP_REFERER'], -9, 9) === 'index.php') {
-            require_once 'DbConnect.php';    
+        /*if (substr($_SERVER['HTTP_REFERER'], -9, 9) === 'index.php') {
+            
         } else {//if (substr($_SERVER['HTTP_REFERER'], -12, 12) === 'userinfo.php') {
             require_once '../../DbConnect.php';
-        }
+        }*/
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $getUserQuery = $db->prepare('SELECT * FROM users WHERE id = ?');
         $getUserQuery->execute(array($id));
