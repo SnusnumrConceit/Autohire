@@ -8,6 +8,7 @@ var btnEdit = $('.btn-warning'),
         $('.create-user-container').slideToggle();
     }) 
 
+    $('#phone-number').inputmask('(999)-999-99-99');
     $('#btn-csv-user').click(function () {  
         $.post('importer.php', {users: "users"}, function (response) {  
             if (response.length != 0) {
@@ -24,7 +25,8 @@ var btnEdit = $('.btn-warning'),
         lastName = $('#last-name').val(),
         firstName = $('#first-name').val(),
         middleName = $('#middle-name').val(),
-        user = new User(login, pass, lastName, firstName, middleName);
+        phoneNumber = $('#phone-number').val(),
+        user = new User(login, pass, lastName, firstName, middleName, phoneNumber);
         if (CheckData(user)) {
             user = JSON.stringify(user);
             $.post('users.php', {user: user}, function (response) { 
@@ -36,12 +38,13 @@ var btnEdit = $('.btn-warning'),
             })
         }
 
-    function User(login, pass, lastName, firstName, middleName) { 
+    function User(login, pass, lastName, firstName, middleName, phoneNumber) { 
         this.login = login,
         this.pass = pass,
         this.lastName = lastName,
         this.firstName = firstName,
-        this.middleName = middleName
+        this.middleName = middleName,
+        this.phoneNumber = phoneNumber
      }
 
     function CheckData(user) {  
@@ -50,25 +53,26 @@ var btnEdit = $('.btn-warning'),
                 user.pass !== undefined && user.pass !== null && user.pass.length !== 0 &&
                 user.lastName !== undefined && user.lastName !== null && user.lastName.length !== 0 &&
                 user.firstName !== undefined && user.firstName !== null && user.firstName.length !== 0 &&
-                user.middleName !== undefined && user.middleName !== null && user.middleName.length !== 0) {
+                user.middleName !== undefined && user.middleName !== null && user.middleName.length !== 0 &&
+                user.phoneNumber !== undefined && user.phoneNumber !== null && user.phoneNumber.length !== 0) {
                     if (user.login.length >= 6 && user.login.length <= 24 &&
                         user.pass.length >= 6 && user.pass.length <= 24 &&
                         user.lastName.length >= 3 && user.lastName.length <= 30 &&
                         user.firstName.length >= 4 && user.firstName.length <= 15 &&
-                        user.middleName.length >= 6 && user.middleName.length <= 24) {
+                        user.middleName.length >= 6 && user.middleName.length <= 24 &&
+                        user.phoneNumber.length == 15) {
                             if ((/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.login) !== null)
                                 && (/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.pass) !== null)
                                 && (/([A-Z][a-z]{2,})|([А-Я][a-я]{2,})/.exec(user.lastName) !== null)
                                 && (/([A-Z][a-z]{3,})|([А-Я][a-я]{3,})/.exec(user.firstName) !== null)
-                                && (/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName) !== null)) {
+                                && (/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName) !== null)
+                                && (/[(][9][0-9]{2}[)][-][0-9]{3}[-][0-9]{2}[-][0-9]{2}/.exec(user.phoneNumber) !== null)) {
                                     if ((/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.login)[0] === user.login)
                                         && (/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.pass)[0] === user.pass)
                                         && (/([A-Z][a-z]{2,})|([А-Я][a-я]{2,})/.exec(user.lastName)[0] === user.lastName)
                                         && (/([A-Z][a-z]{3,})|([А-Я][a-я]{3,})/.exec(user.firstName)[0] === user.firstName)
-                                        && (/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName)[0] === user.middleName)) {
-                                            console.log(/([A-Z][a-z]{2,})|([А-Я][a-я]{2,})/.exec(user.lastName));
-                                            console.log(/([A-Z][a-z]{3,})|([А-Я][a-я]{3,})/.exec(user.firstName));
-                                            console.log(/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName));
+                                        && (/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName)[0] === user.middleName)
+                                        && (/[(][9][0-9]{2}[)][-][0-9]{3}[-][0-9]{2}[-][0-9]{2}/.exec(user.phoneNumber)[0] === user.phoneNumber)) {
                                             return true;
                                     } else {
                                         throw new Error('Wrong Data Error');
@@ -98,6 +102,10 @@ var btnEdit = $('.btn-warning'),
                     alert('Вы не ввели пароль!');
                 }
 
+                if (user.phoneNumber === undefined || user.phoneNumber === null || user.phoneNumber.length == 0) {
+                    alert('Вы не ввели номер телефона!');
+                }
+
                 if (user.lastName === undefined || user.lastName === null || user.lastName.length === 0) {
                     alert('Вы не ввели фамилию!');
                 }
@@ -109,6 +117,7 @@ var btnEdit = $('.btn-warning'),
                 if (user.middleName === undefined || user.middleName === null || user.middleName.length === 0) {
                     alert('Вы не ввели отчество!');
                 }
+                
             }
             
             if (error.message === 'Length Data Error') {
@@ -131,6 +140,10 @@ var btnEdit = $('.btn-warning'),
 
                 if (user.middleName.length < 6 || user.middleName.length > 24) {
                     alert('Длина отчества должна быть от 6 до 24 символов!');
+                }
+
+                if (user.phoneNumber.length != 15) {
+                    alert('Наш сервис работает только с телефоннами номерами РФ!');
                 }
             }
             
@@ -161,6 +174,10 @@ var btnEdit = $('.btn-warning'),
 
                 if ((/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName) === null) || (/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName)[0] !== user.middleName)) {
                     alert('Отчество должно состоять из латинских букв или кириллистических букв!')
+                }
+
+                if ((/[(][9][0-9]{2}[)][-][0-9]{3}[-][0-9]{2}[-][0-9]{2}/.exec(user.phoneNumber)) === null || (/[(][9][0-9]{2}[)][-][0-9]{3}[-][0-9]{2}[-][0-9]{2}/.exec(user.phoneNumber)[0] !== user.phoneNumber)) {
+                    alert('Наш сервис работает только с телефоннами номерами РФ!');
                 }
             }
         }

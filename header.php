@@ -90,6 +90,10 @@ UNLOGGED_PANEL;
                 <input type="password" name="user-confirm-password" id="user-confirm-password" value="" class="form-control">
             </div>
             <div class="form-group">
+                        <label for="phone-number">Номер телефона</label>
+                        <input type="text" class="form-control" id="phone-number">
+            </div>
+            <div class="form-group">
                 <label for="user-last-name">Фамилия</label>
                 <input type="text" name="user-last-name" id="user-last-name" value="" class="form-control">
             </div> 

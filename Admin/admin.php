@@ -1,7 +1,8 @@
 <?php
+    /*НОВЫЙ ФУНКЦИОНАЛ
     session_start();
     if ($_SESSION ?? '') {
-        if ($_SESSION['name'] === 'admin') {
+        if ($_SESSION['name'] === 'admin') {*/
 print <<<ADMIN
 <!DOCTYPE html>
 <html lang="en">
@@ -47,10 +48,11 @@ print <<<ADMIN
     </body>
 </html>
 ADMIN;
+    /*КОНЕЦ ПРОВЕРОК
     } else {
         header('location: ../enter.php');
     }
 } else {
     header('location: ../enter.php');
-}
+}*/
 ?>

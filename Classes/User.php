@@ -15,7 +15,7 @@ class User implements IUser{
         $db = DbConnect();
         if ($this->CheckDublicates($db, $user, 'create')) {
             $createUserQuery = $db->prepare("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $createUserQuery->execute(array($user->id, $user->login, $user->password, $user->lastName, $user->firstName, $user->middleName, 1));
+            $createUserQuery->execute(array($user->id, $user->login, $user->password, $user->lastName, $user->firstName, $user->middleName, $user->phoneNumber));
         } 
     }
 
@@ -80,56 +80,63 @@ class User implements IUser{
         $user->lastName = $inputData->lastName;
         $user->firstName = $inputData->firstName;
         $user->middleName = $inputData->middleName;
+        $user->phoneNumber = $inputData->phoneNumber;
         return $user;
     }
 
-    public function CheckData($inputData)
+    public function CheckData($user)
     {
         try {
-            $user = $inputData;             
             #проверка на обязательность поля
             if (strlen($user->login) != 0 && strlen($user->pass) != 0 && strlen($user->lastName) != 0 && 
-            strlen($user->firstName) != 0 && strlen($user->middleName) !=0) {                
+            strlen($user->firstName) != 0 && strlen($user->middleName) !=0 && strlen($user->phoneNumber) != 0) {                
                 $loginLength = strlen($user->login);
                 $passLength = strlen($user->pass);
-                $firstNameLength = strlen($user->firstName);
-                $middleNameLength = strlen($user->middleName);
-                $lastNameLength = strlen($user->lastName);
+                $firstNameLength = mb_strlen($user->firstName);
+                $middleNameLength = mb_strlen($user->middleName);
+                $lastNameLength = mb_strlen($user->lastName);
+                $phoneNumberLength = strlen($user->phoneNumber);
                 #проверка на длину поля
                 if ($loginLength >= 6 && $loginLength <= 24 &&
                     $passLength >= 6 && $passLength <= 24 &&
                     $firstNameLength >= 4 && $firstNameLength <= 15 &&
                     $lastNameLength >= 3 && $lastNameLength <= 30 &&
-                    $middleNameLength >=6 && $middleNameLength <= 24) {
+                    $middleNameLength >=6 && $middleNameLength <= 24 &&
+                    $phoneNumberLength == 15) {
                         #проверка на наличие XSS-атаки в поле
                         if (htmlspecialchars($user->login) == $user->login &&
                             htmlspecialchars($user->pass) == $user->pass &&
                             htmlspecialchars($user->lastName) == $user->lastName &&
                             htmlspecialchars($user->firstName) == $user->firstName &&
-                            htmlspecialchars($user->middleName) == $user->middleName) {
+                            htmlspecialchars($user->middleName) == $user->middleName &&
+                            htmlspecialchars($user->phoneNumber) == $user->phoneNumber) {
                                 #проверка на наличие пробелов в поле
                                 if (trim($user->login) == $user->login &&
                                     trim($user->pass) == $user->pass &&
                                     trim($user->lastName) == $user->lastName &&
                                     trim($user->firstName) == $user->firstName &&
-                                    trim($user->middleName) == $user->middleName) {                                        
+                                    trim($user->middleName) == $user->middleName &&
+                                    trim($user->phoneNumber) == $user->phoneNumber) {                                        
                                         #проверка на соответствие регуляркам                                        
                                         preg_match('/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/', $user->login, $regLogin);
                                         preg_match('/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/', $user->pass, $regPass);
                                         preg_match('/[A-ZА-ЯЁ]{1}[a-zа-яё]{2,}/u', $user->lastName, $regLastName);
                                         preg_match('/[A-ZА-ЯЁ]{1}[a-zа-яё]{3,}/u', $user->firstName, $regFirstName);
                                         preg_match('/[A-ZА-ЯЁ]{1}[a-zа-яё]{5,}/u', $user->middleName, $regMiddleName);
+                                        preg_match('/[(][9][0-9]{2}[)][-][0-9]{3}[-][0-9]{2}[-][0-9]{2}/', $user->phoneNumber, $regPhoneNumber);
                                         
-                                        if (($regLogin ?? '') && ($regPass ?? '') && ($regLastName ?? '') && ($regFirstName ?? '') && ($regMiddleName ?? '')) {
-                                            if ($regLogin[0] == $user->login &&
-                                            $regPass[0] == $user->pass &&                                            
-                                            $regLastName[0] == $user->lastName &&
-                                            $regFirstName[0] == $user->firstName &&
-                                            $regMiddleName[0] == $user->middleName) {
-                                                return true;
-                                            } else {
-                                                throw new Exception('Wrong Data Error', 1);
-                                            }    
+                                        if (($regLogin ?? '') && ($regPass ?? '') && ($regLastName ?? '') && 
+                                            ($regFirstName ?? '') && ($regMiddleName ?? '') && ($regPhoneNumber ?? '')) {
+                                                if ($regLogin[0] == $user->login &&
+                                                $regPass[0] == $user->pass &&                                            
+                                                $regLastName[0] == $user->lastName &&
+                                                $regFirstName[0] == $user->firstName &&
+                                                $regMiddleName[0] == $user->middleName &&
+                                                $regPhoneNumber[0] == $user->phoneNumber) {
+                                                    return true;
+                                                } else {
+                                                    throw new Exception('Wrong Data Error', 1);
+                                                }    
                                         } else {
                                             throw new Exception('Wrong Data Error', 1);
                                         }    
@@ -150,19 +157,22 @@ class User implements IUser{
         catch (Exception $error) {            
             if ($error->getMessage() === 'Empty Data Error') {                
                 if (strlen($user->login) == 0) {                    
-                    echo("Поле Логин является обязательным \n");                                        
+                    echo("Вы не ввели пароль! \n");                                        
                 } 
                 if (strlen($user->pass) == 0) {
-                    echo("Поле Пароль является обязательным \n");                    
+                    echo("Вы не ввели пароль! \n");                    
                 } 
-                if (strlen($user->lastName) == 0) {
-                    echo("Поле Фамилия является обязательным \n");                    
+                if (mb_strlen($user->lastName) == 0) {
+                    echo("Вы не ввели фамилию! \n");                    
                 }
-                if (strlen($user->firstName) == 0) {
-                    echo("Поле Имя является обязательным \n");
+                if (mb_strlen($user->firstName) == 0) {
+                    echo("Вы не ввели имя! \n");
                 }
-                if (strlen($user->middleName) ==0) {
-                    echo("Поле Отчество является обязательным \n");
+                if (mb_strlen($user->middleName) == 0) {
+                    echo("Вы не ввели отчество!\n");
+                }
+                if(strlen($user->phoneNumber) == 0) {
+                    echo('Вы не ввели номер телефона!');
                 }
                 return false;
             }
@@ -181,6 +191,9 @@ class User implements IUser{
                 }
                 if (strlen($user->middleName) < 6 || strlen($user->middleName) > 24) {
                     echo("Отчество должно быть от 6 до 24 символов \n");                    
+                }
+                if ($phoneNumberLength != 15) {
+                    echo('Наш сервис работает только с телефоннами номерами РФ!');
                 }
                 return false;
             }
@@ -243,6 +256,19 @@ class User implements IUser{
                 if ($regMiddleName ?? '') {
                     if ($regMiddleName[0] != $user->middleName) {
                         echo("Отчество должно состоять из латинских букв, цифр, точки и знака подчёркивания \n");
+                    } 
+                }
+
+                if (htmlspecialchars($user->phoneNumber) != $user->phoneNumber && trim($user->phoneNumber) != $user->phoneNumber || !($regPhoneNumber ?? '')) {
+                    if (($regPhoneNumber[0] ?? '') && $regPhoneNumber[0] == $user->phoneNumber) {
+                        echo('Наш сервис работает только с телефоннами номерами РФ!');
+                    } else {
+                        echo('Наш сервис работает только с телефоннами номерами РФ!');
+                    }                                        
+                }
+                if ($regPhoneNumber ?? '') {
+                    if ($regPhoneNumber[0] != $user->phoneNumber) {
+                        echo('Наш сервис работает только с телефоннами номерами РФ!');
                     } 
                 }
                 return false;

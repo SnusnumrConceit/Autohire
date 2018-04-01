@@ -49,6 +49,10 @@
                         <input type="password" class="form-control" id="password">
                     </div>
                     <div class="form-group">
+                        <label for="phone-number">Номер телефона</label>
+                        <input type="text" class="form-control" id="phone-number">
+                    </div>
+                    <div class="form-group">
                         <label for="last-name">Фамилия</label>
                         <input type="text" class="form-control" id="last-name">
                     </div>
@@ -83,6 +87,7 @@ USER;
                                             <th>Фамилия</th>
                                             <th>Имя</th>
                                             <th>Отчество</th>
+                                            <th>Номер телефона</th>
                                             <th>Операции</th>
                                         </thead>
                                         <tbody>";
@@ -94,6 +99,7 @@ USER;
                                 <td>{$findlessUsers[$i]->LName}</td>
                                 <td>{$findlessUsers[$i]->FName}</td>
                                 <td>{$findlessUsers[$i]->MName}</td>
+                                <td>{$findlessUsers[$i]->Phone}</td>
                                 <td><button class=\"btn btn-warning\">Изменить</button><button class=\"btn btn-danger\">Удалить</button></td>
                                 </tr>";
                     }
@@ -144,6 +150,10 @@ print <<<USERS
                         <input type="password" class="form-control" id="password">
                     </div>
                     <div class="form-group">
+                        <label for="phone-number">Номер телефона</label>
+                        <input type="text" class="form-control" id="phone-number">
+                    </div>
+                    <div class="form-group">
                         <label for="last-name">Фамилия</label>
                         <input type="text" class="form-control" id="last-name">
                     </div>
@@ -179,6 +189,7 @@ USERS;
                                         <th>Фамилия</th>
                                         <th>Имя</th>
                                         <th>Отчество</th>
+                                        <th>Номер телефона</th>
                                         <th>Операции</th>
                                     </thead>
                                     <tbody>";
@@ -189,6 +200,7 @@ USERS;
                                             <td>{$result[$i]->LName}</td>
                                             <td>{$result[$i]->FName}</td>
                                             <td>{$result[$i]->MName}</td>
+                                            <td>{$result[$i]->Phone}</td>
                                             <td><button class=\"btn btn-warning\">Изменить</button><button class=\"btn btn-danger\">Удалить</button></td>
                                         </tr>";
                             }
@@ -200,6 +212,7 @@ print               "</tbody>
             </div>
         </div>  
         <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>
+        <script src=\"https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js\"></script>
         <script src=\"../Scripts/users_scripts.js\"></script>      
     </body>
 </html>";

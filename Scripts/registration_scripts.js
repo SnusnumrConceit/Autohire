@@ -1,3 +1,4 @@
+$('#phone-number').inputmask('(999)-999-99-99');
 $('#btn-registration').click(function () {  
 var login = $('#user-login').val(),
         pass = $('#user-password').val(),
@@ -5,7 +6,8 @@ var login = $('#user-login').val(),
         lastName = $('#user-last-name').val(),
         firstName = $('#user-first-name').val(),
         middleName = $('#user-middle-name').val(),
-        user = new User(login, pass, lastName, firstName, middleName);
+        phoneNumber = $('#phone-number').val(),
+        user = new User(login, pass, lastName, firstName, middleName, phoneNumber);
         if (CheckData(user)) {
             user = JSON.stringify(user);
             $.post('admin/users.php', {user: user}, function (response) { 
@@ -17,12 +19,13 @@ var login = $('#user-login').val(),
             })
         }
 
-    function User(login, pass, lastName, firstName, middleName) { 
+    function User(login, pass, lastName, firstName, middleName, phoneNumber) { 
         this.login = login,
         this.pass = pass,
         this.lastName = lastName,
         this.firstName = firstName,
-        this.middleName = middleName
+        this.middleName = middleName,
+        this.phoneNumber = phoneNumber
      }
 
     function CheckData(user) {  
@@ -32,25 +35,26 @@ var login = $('#user-login').val(),
                 user.lastName !== undefined && user.lastName !== null && user.lastName.length !== 0 &&
                 user.firstName !== undefined && user.firstName !== null && user.firstName.length !== 0 &&
                 user.middleName !== undefined && user.middleName !== null && user.middleName.length !== 0 &&
-                confirmPass !== undefined && confirmPass !== null && confirmPass.length !== 0) {
+                confirmPass !== undefined && confirmPass !== null && confirmPass.length !== 0 &&
+                user.phoneNumber !== undefined && user.phoneNumber !== null && user.phoneNumber.length !== 0) {
                     if (user.login.length >= 6 && user.login.length <= 24 &&
                         user.pass.length >= 6 && user.pass.length <= 24 &&
                         user.lastName.length >= 3 && user.lastName.length <= 30 &&
                         user.firstName.length >= 4 && user.firstName.length <= 15 &&
-                        user.middleName.length >= 6 && user.middleName.length <= 24) {
+                        user.middleName.length >= 6 && user.middleName.length <= 24 &&
+                        user.phoneNumber.length == 15) {
                             if ((/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.login) !== null)
                                 && (/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.pass) !== null)
                                 && (/([A-Z][a-z]{2,})|([А-Я][a-я]{2,})/.exec(user.lastName) !== null)
                                 && (/([A-Z][a-z]{3,})|([А-Я][a-я]{3,})/.exec(user.firstName) !== null)
-                                && (/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName) !== null)) {
+                                && (/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName) !== null)
+                                && (/[(][9][0-9]{2}[)][-][0-9]{3}[-][0-9]{2}[-][0-9]{2}/.exec(user.phoneNumber) !== null)) {
                                     if ((/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.login)[0] === user.login)
                                         && (/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.pass)[0] === user.pass)
                                         && (/([A-Z][a-z]{2,})|([А-Я][a-я]{2,})/.exec(user.lastName)[0] === user.lastName)
                                         && (/([A-Z][a-z]{3,})|([А-Я][a-я]{3,})/.exec(user.firstName)[0] === user.firstName)
-                                        && (/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName)[0] === user.middleName)) {
-                                            console.log(/([A-Z][a-z]{2,})|([А-Я][a-я]{2,})/.exec(user.lastName));
-                                            console.log(/([A-Z][a-z]{3,})|([А-Я][a-я]{3,})/.exec(user.firstName));
-                                            console.log(/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName));
+                                        && (/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName)[0] === user.middleName)
+                                        && (/[(][9][0-9]{2}[)][-][0-9]{3}[-][0-9]{2}[-][0-9]{2}/.exec(user.phoneNumber)[0] === user.phoneNumber)) {
                                             if (user.pass === confirmPass) {
                                                 return true;    
                                             } else {
@@ -84,6 +88,10 @@ var login = $('#user-login').val(),
                     alert('Вы не ввели пароль!');
                 }
 
+                if (user.phoneNumber === undefined || user.phoneNumber === null || user.phoneNumber.length == 0) {
+                    alert('Вы не ввели номер телефона!');
+                }
+
                 if (user.lastName === undefined || user.lastName === null || user.lastName.length === 0) {
                     alert('Вы не ввели фамилию!');
                 }
@@ -111,6 +119,10 @@ var login = $('#user-login').val(),
                     alert('Длина пароля должна быть от 6 до 24 символов!');
                 }
 
+                if (user.phoneNumber.length != 15) {
+                    alert('Наш сервис работает только с телефоннами номерами РФ!');
+                }
+
                 if (user.lastName.length < 3 || user.lastName.length > 30) {
                     alert('Длина фамилии должна быть от 3 до 30 символов!');
                 }
@@ -122,6 +134,7 @@ var login = $('#user-login').val(),
                 if (user.middleName.length < 6 || user.middleName.length > 24) {
                     alert('Длина отчества должна быть от 6 до 24 символов!');
                 }
+                
             }
             
             if (error.message === 'Wrong Data Error') {
@@ -135,6 +148,10 @@ var login = $('#user-login').val(),
                 
                 if (/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.pass) === null || (/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.pass)[0] !== user.pass)){
                     alert('Пароль должен состоять из латинских букв, точки и нижнего подчёркивания!');
+                }
+
+                if ((/[(][9][0-9]{2}[)][-][0-9]{3}[-][0-9]{2}[-][0-9]{2}/.exec(user.phoneNumber)) === null || (/[(][9][0-9]{2}[)][-][0-9]{3}[-][0-9]{2}[-][0-9]{2}/.exec(user.phoneNumber)[0] !== user.phoneNumber)) {
+                    alert('Наш сервис работает только с телефоннами номерами РФ!');
                 }
 
                 if (/([A-Z][a-z]{2,})|([А-Я][a-я]{2,})/.exec(user.lastName) === null) {
