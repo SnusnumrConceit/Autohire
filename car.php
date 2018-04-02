@@ -12,9 +12,9 @@
                 $order = new Order();
                 if($order->CheckData($inputData)){
                     $order = $order->SetData($inputData, $order);
-                    require_once 'DbConnect.php';
-                    $db = DbConnect();
-                    $order->CreateOrder($order, $db);
+                    
+                    $order->CreateOrder($order);
+                    setcookie("Order[{$order->id}]", md5($order->product_id), time() - 3600, '/');
                 }
             }
         } else {
@@ -43,28 +43,35 @@ print "<!DOCTYPE html>
                 if ($product) {
 print <<<PRODUCT
                 <div class="row"
-                    <div class="photo-container col-sm-8"><img src="data:image/jpg;base64,{$product[0]->Photo}"></div>
-                    <div class="functional-container">
+                    <div class="photo-container col-sm-8"><img class="img-fluid" src="data:image/jpg;base64,{$product[0]->Photo}"></div>
+                    <div class="functional-container col">
                         <form method="POST">
-                            <div class="form-group">
-                                <label for="hours">Количество часов</label>
-                                <input type="number" class="form-control" id="hours" value="1">
-                            </div>
-                            <div class="form-group col-sm-4">
-                                <span>Цена: {$product[0]->Price} руб./ч</span>
-                                <button type="button" class="btn btn-primary" id="btn-rent">В аренду</button>
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="hours">Количество часов</label>
+                                    <input type="number" class="form-control" id="hours" value="1">
+                                </div>
+                                <div class="form-group col">
+                                    <span>Цена: {$product[0]->Price} руб./ч</span>
+                                    <button type="button" class="btn btn-primary" id="btn-rent">В аренду</button>
+                                </div>
                             </div>
                         </form>
-                    </div>
-                <div class="row">
-                    <nav class="navbar-nav">
-                        <ul>
-                            <li>Характеристики</li>
-                            <li>Дополнительные</li>
-                    </nav>
                 </div>
                 <div class="row">
-                    <div id="main-characteristics">
+                    <nav class="col-sm-12">
+                        <ul class="nav nav-tabs nav-justified">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#main-characteristics">Характеристики</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#addictive-characteristics">Дополнительные</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="tab-content">
+                    <div id="main-characteristics" class="tab-pane active container">
                         <ul>
                             <li>Кузов: {$product[0]->Type}</li>
                             <li>Коробка передач: {$product[0]->Transmission}</li>
@@ -72,7 +79,7 @@ print <<<PRODUCT
                             <li>Привод: {$product[0]->Control}</li>
                         </ul>
                     </div>
-                    <div id="addictive-characteristics">
+                    <div id="addictive-characteristics" class="tab-pane container fade">
 PRODUCT;
                         if ($product[0]->Options ?? '') {
                                    print "<ul>";
@@ -89,12 +96,9 @@ PRODUCT;
            print     "</div>
             </div>
         </div>
-        </div>
-        <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>
-        <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js\" integrity=\"sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn\" crossorigin=\"anonymous\"></script>
-        <script src=\"Scripts/registration_scripts.js\"></script>
-        <script src=\"Scripts/login_scripts.js\"></script>
-        <script src=\"Scripts/car_scripts.js\"></script> 
+        </div>";
+        require_once 'footer.php';
+    print "<script src=\"Scripts/car_scripts.js\"></script>
     </body>
 </html>";
 

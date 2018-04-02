@@ -1,5 +1,6 @@
 $('#phone-number').inputmask('(999)-999-99-99');
 $('#btn-registration').click(function () {  
+$('.alert').remove();
 var login = $('#user-login').val(),
         pass = $('#user-password').val(),
         confirmPass = $('#user-confirm-password').val(),
@@ -73,101 +74,119 @@ var login = $('#user-login').val(),
                 throw new Error('Empty Data Error');
             }
         } catch (error) {
-            console.log(/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.login));
-                console.log(/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.pass));
-                console.log(/[A-ZА-ЯЁ]{1}[a-zа-яё]{2,}/.exec(user.lastName));
-                console.log(/[A-ZА-ЯЁ]{1}[a-zа-яё]{3,}/.exec(user.firstName));
-                console.log(/[A-ZА-ЯЁ]{1}[a-zа-яё]{5,}/.exec(user.middleName));
-                console.log('-------------------------------------------------');
             if (error.message === 'Empty Data Error') {
                 if (user.login === undefined || user.login === null || user.login.length === 0) {
-                    alert('Вы не ввели логин!');
+                    $('#user-login').toggleClass('is-invalid');
+                    $('#user-login').after('<div class="invalid-feedback">Вы не ввели логин!</div>');
+                } else {
+                    $('#user-login').toggleClass('is-valid');
+                    $('#user-login').after('<div class="invalid-feedback">Вы не ввели логин!</div>');
                 }
 
                 if (user.pass === undefined || user.pass === null || user.pass.length === 0) {
-                    alert('Вы не ввели пароль!');
+                    $('#user-password').toggleClass('is-invalid');
+                    $('#user-password').after('<div class="invalid-feedback">Вы не ввели пароль!</div>');
                 }
 
                 if (user.phoneNumber === undefined || user.phoneNumber === null || user.phoneNumber.length == 0) {
-                    alert('Вы не ввели номер телефона!');
+                    $('#phone-number').toggleClass('is-invalid');
+                    $('#phone-number').after('<div class="invalid-feedback">Вы не ввели номер телефона!</div>');
                 }
 
                 if (user.lastName === undefined || user.lastName === null || user.lastName.length === 0) {
-                    alert('Вы не ввели фамилию!');
+                    $('#user-last-name').toggleClass('is-invalid');
+                    $('#user-last-name').after('<div class="invalid-feedback">Вы не ввели фамилию!</div>');
                 }
 
                 if (user.firstName === undefined || user.firstName === null || user.firstName.length === 0) {
-                    alert('Вы не ввели имя!');
+                    $('#user-first-name').toggleClass('is-invalid');
+                    $('#user-first-name').after('<div class="invalid-feedback">Вы не ввели имя!</div>');
                 }
 
                 if (user.middleName === undefined || user.middleName === null || user.middleName.length === 0) {
-                    alert('Вы не ввели отчество!');
+                    $('#user-middle-name').toggleClass('is-invalid');
+                    $('#user-middle-name').after('<div class="invalid-feedback">Вы не ввели отчество!</div>');
                 }
 
                 if (confirmPass === undefined || confirmPass === null || confirmPass.length === 0) {
-                    alert('Вы не подтвердили пароль!');
+                    $('#user-confirm-password').toggleClass('is-invalid');
+                    $('#user-confirm-password').after('<div class="invalid-feedback">Вы не подтвердили пароль!</div>');
                 }
             }
             
             if (error.message === 'Length Data Error') {
                 
                 if (user.login.length < 6 || user.login.length > 24) {
-                    alert('Длина логина должна быть от 6 до 24 символов!');
+                    $('#user-login').toggleClass('is-invalid');
+                    $('#user-login').after('<div class="invalid-feedback">Длина логина должна быть от 6 до 24 символов!</div>');
                 }
 
                 if (user.pass.length < 6 || user.pass.length > 24) {
-                    alert('Длина пароля должна быть от 6 до 24 символов!');
+                    $('#user-password').toggleClass('is-invalid');
+                    $('#user-password').after('<div class="invalid-feedback">Длина пароля должна быть от 6 до 24 символов!</div>');
                 }
 
                 if (user.phoneNumber.length != 15) {
-                    alert('Наш сервис работает только с телефоннами номерами РФ!');
+                    $('#phone-number').toggleClass('is-invalid');
+                    $('#phone-number').after('<div class="invalid-feedback">Наш сервис работает только с операторами РФ!</div>');
                 }
 
                 if (user.lastName.length < 3 || user.lastName.length > 30) {
-                    alert('Длина фамилии должна быть от 3 до 30 символов!');
+                    $('#user-last-name').toggleClass('is-invalid');
+                    $('#user-last-name').after('<div class="invalid-feedback">Длина фамилии должна быть от 3 до 30 символов!</div>');
                 }
 
                 if (user.firstName.length < 4 || user.firstName.length > 15) {
-                    alert('Длина имени должна быть от 4 до 15 символов!');
+                    $('#user-first-name').toggleClass('is-invalid');
+                    $('#user-first-name').after('<div class="invalid-feedback">Длина имени должна быть от 4 до 15 символов!</div>');                    
                 }
 
                 if (user.middleName.length < 6 || user.middleName.length > 24) {
-                    alert('Длина отчества должна быть от 6 до 24 символов!');
+                    $('#user-middle-name').toggleClass('is-invalid');
+                    $('#user-middle-name').after('<div class="invalid-feedback">Длина отчества должна быть от 6 до 24 символов!</div>');
                 }
                 
             }
             
             if (error.message === 'Wrong Data Error') {
-                if ((/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.login) === null)){                    
-                    alert('Логин должен состоять из латинских букв, точки и нижнего подчёркивания!');
+                if ((/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.login) === null)){
+                    $('#user-login').toggleClass('is-invalid');
+                    $('#user-login').after('<div class="invalid-feedback">Логин должен состоять из латинских букв, точки и нижнего подчёркивания!</div>');
                 } else {
                     if (/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.login)[0] !== user.login) {
-                        alert('Логин должен состоять из латинских букв, точки и нижнего подчёркивания!');
+                        $('#user-login').toggleClass('is-invalid');
+                        $('#user-login').after('<div class="invalid-feedback">Логин должен состоять из латинских букв, точки и нижнего подчёркивания!</div>');
                     }
                 }
                 
                 if (/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.pass) === null || (/[A-Za-z]{1,}[a-zA-Z0-9_.]{5,}/.exec(user.pass)[0] !== user.pass)){
-                    alert('Пароль должен состоять из латинских букв, точки и нижнего подчёркивания!');
+                    $('#user-password').toggleClass('is-invalid');
+                    $('#user-password').after('<div class="invalid-feedback">Пароль должен состоять из латинских букв, точки и нижнего подчёркивания!</div>');
                 }
 
                 if ((/[(][9][0-9]{2}[)][-][0-9]{3}[-][0-9]{2}[-][0-9]{2}/.exec(user.phoneNumber)) === null || (/[(][9][0-9]{2}[)][-][0-9]{3}[-][0-9]{2}[-][0-9]{2}/.exec(user.phoneNumber)[0] !== user.phoneNumber)) {
-                    alert('Наш сервис работает только с телефоннами номерами РФ!');
+                    $('#phone-number').toggleClass('is-invalid');
+                    $('#phone-number').after('<div class="invalid-feedback">Наш сервис работает только с операторами РФ!</div>');
                 }
 
                 if (/([A-Z][a-z]{2,})|([А-Я][a-я]{2,})/.exec(user.lastName) === null) {
-                    alert('Фамилия должна состоять из латинских букв или кириллистических букв!');
+                    $('#user-last-name').toggleClass('is-invalid');
+                    $('#user-last-name').after('<div class="invalid-feedback">Фамилия должна состоять из латинских букв или кириллистических букв!</div>');
                 } else {
                     if (/([A-Z][a-z]{2,})|([А-Я][a-я]{2,})/.exec(user.lastName)[0] !== user.lastName) {
-                        alert('Фамилия должна состоять из латинских букв или кириллистических букв!');
+                        $('#user-last-name').toggleClass('is-invalid');
+                        $('#user-last-name').after('<div class="invalid-feedback">Фамилия должна состоять из латинских букв или кириллистических букв!</div>');
                     }
                 }
 
                 if ((/([A-Z][a-z]{3,})|([А-Я][a-я]{3,})/.exec(user.firstName) === null) || (/([A-Z][a-z]{3,})|([А-Я][a-я]{3,})/.exec(user.firstName)[0] != user.firstName)) {
-                    alert('Имя должно состоять из латинских букв или кириллистических букв!');
+                    $('#user-first-name').toggleClass('is-invalid');
+                    $('#user-first-name').after('<div class="invalid-feedback">Имя должно состоять из латинских букв или кириллистических букв!</div>');
                 }
 
                 if ((/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName) === null) || (/([A-Z][a-z]{5,})|([А-Я][a-я]{5,})/.exec(user.middleName)[0] !== user.middleName)) {
-                    alert('Отчество должно состоять из латинских букв или кириллистических букв!')
+                    $('#user-middle-name').toggleClass('is-invalid');
+                    $('#user-middle-name').after('<div class="invalid-feedback">Отчество должно состоять из латинских букв или кириллистических букв!</div>');
                 }
             }
 

@@ -13,7 +13,7 @@
         <title>Изменение модели {$product[0]->Model}</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
     <body>
         <div class="container">
@@ -22,7 +22,7 @@
             <form method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="photo">Картинка</label>
-                        <input type="file" class="form-control" id="photo">
+                        <input type="file" class="form-control-file" id="photo">
                     </div>
                     <div class="form-group">
                         <label for="brand">Марка</label>
@@ -94,9 +94,17 @@ PRODUCT;
                                 }
                             }
                             if (in_array($i, $optionValidArr)) {
-                                print "<label>{$options[$i]->Title}<input type=\"checkbox\" value=\"{$options[$i]->id}\" checked></label>";
+                                print "<div class=\"form-check form-check-inline\">
+                                            <label class=\"form-check-label\">
+                                                <input type=\"checkbox\" class=\"form-check-input\" value=\"{$options[$i]->id}\" checked>{$options[$i]->Title}
+                                            </label>
+                                        </div>";
                             } else {
-                                print "<label>{$options[$i]->Title}<input type=\"checkbox\" value=\"{$options[$i]->id}\"></label>";
+                                print "<div class=\"form form-check-inline\">
+                                        <label class=\"form-check-label\">
+                                            <input type=\"checkbox\" class=\"form-check-input\" value=\"{$options[$i]->id}\">{$options[$i]->Title}
+                                        </label>
+                                        </div>";
                             }
                         }
                         

@@ -29,25 +29,33 @@ print <<<ORDERS
         <title>Заказы</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
     <body>
          <div class="container">
-            <div>
+            <div class="row">
+            <div class="col-3">
                 <button id="btn-open-create-order-container" class="btn btn-success">Добавить</button>
                 <a class="btn btn-default" href="admin.php">На главную</a>
             </div>
+            <div class="find-order-container col">                
+                <form method="GET" class="form-inline">
+                    <input class="form-control col-sm-5" type="text" id="order" placeholder="Введите фамилию клиента">
+                    <button id="btn-find-order" class="btn btn-primary col-form-label">Найти</button>
+                </form>
+            </div>
+            </div>
             <div class="form-group create-order-container">
                 <form method="POST">
-                    <div class="form-group">
-                        <label for="user">Пользователь</label>
+                    <div class="form-group row">
+                        <label for="user" class="col-sm-2 col-form-label">Пользователь</label>
 ORDERS;
             require_once '../Classes/User.php';
             $user = new User();
             $users = $user->ShowUsers();
             $usersLength = count($users);
             if ($users) {
-                print "<select id=\"user\" class=\"form-control\">";
+                print "<select id=\"user\" class=\"form-control col-sm-4\">";
                 for ($i=0; $i < $usersLength; $i++) { 
                     print "<option value=\"{$users[$i]->id}\">{$users[$i]->Login} ({$users[$i]->LName} {$users[$i]->FName} {$users[$i]->MName})</option>";
                 }
@@ -56,15 +64,15 @@ ORDERS;
                 print "<div>Для оформления заказа сначала добавьте пользователей в разделе <a href='users.php'><strong>Пользователи</strong></a></div>";
             }
             print "</div>
-                <div class=\"form-group\">
-                   <label for=\"car\">Автомобиль</label>";
+                <div class=\"form-group row\">
+                   <label for=\"car\" class=\"col-form-label col-sm-2\">Автомобиль</label>";
                     
 
             require_once '../Classes/Product.php';
             $car = new Product();
             $cars = $car->ShowProducts();
             if ($cars) {
-                print "<select id=\"car\" class=\"form-control\">";
+                print "<select id=\"car\" class=\"form-control col-sm-4\">";
                 for ($i=0; $i < $carsLength; $i++) { 
                     print "<option value=\"{$cars[$i]->id}\">{$cars[$i]->Model} ({$cars[$i]->Type})</option>";
                 }
@@ -73,17 +81,11 @@ ORDERS;
                 print "<div>Для оформления заказа сначала добавьте автомобиль в разделе <a href='products.php'><strong>Автомобили</strong></a></div>";
             }
             print "</div>
-                <div class=\"form-group\">
-                    <label for=\"hours\">Количество часов</label>
-                    <input class=\"form-control\" id=\"hours\">
+                <div class=\"form-group row\">
+                    <label for=\"hours\" class=\"col-sm-2 col-form-label\">Количество часов</label>
+                    <input class=\"form-control col-sm-4\" id=\"hours\">
                 </div>
                 <button type=\"button\" id=\"btnSubmit\" class=\"btn btn-success\">Отправить</button>    
-                </form>
-            </div>
-            <div class=\"find-order-container\">                
-                <form method=\"GET\">
-                    <input class=\"form-control\" type=\"text\" id=\"order\" placeholder=\"Введите фамилию клиента\" value=\"{$inputData}\">
-                    <button id=\"btn-find-order\" class=\"btn btn-primary\">Найти</button>
                 </form>
             </div>
             <div>
@@ -143,25 +145,33 @@ print <<<ORDERS
         <title>Заказы</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
     <body>
          <div class="container">
-            <div>
+            <div class="row">
+            <div class="col-3">
                 <button id="btn-open-create-order-container" class="btn btn-success">Добавить</button>
                 <a class="btn btn-default" href="admin.php">На главную</a>
             </div>
+            <div class="find-order-container col">                
+                <form method="GET" class="form-inline">
+                    <input class="form-control col-sm-5" type="text" id="order" placeholder="Введите фамилию клиента">
+                    <button id="btn-find-order" class="btn btn-primary col-form-label">Найти</button>
+                </form>
+            </div>
+            </div>
             <div class="form-group create-order-container">
                 <form method="POST">
-                    <div class="form-group">
-                        <label for="user">Пользователь</label>
+                    <div class="form-group row">
+                        <label for="user" class="col-sm-2 col-form-label">Пользователь</label>
 ORDERS;
             require_once '../Classes/User.php';
             $user = new User();
             $users = $user->ShowUsers();
             $usersLength = count($users);
             if ($users) {
-                print "<select id=\"user\" class=\"form-control\">";
+                print "<select id=\"user\" class=\"form-control col-sm-4\">";
                 for ($i=0; $i < $usersLength; $i++) { 
                     print "<option value=\"{$users[$i]->id}\">{$users[$i]->Login} ({$users[$i]->LName} {$users[$i]->FName} {$users[$i]->MName})</option>";
                 }
@@ -170,8 +180,8 @@ ORDERS;
                 print "<div>Для оформления заказа сначала добавьте пользователей в разделе <a href='users.php'><strong>Пользователи</strong></a></div>";
             }
             print "</div>
-                <div class=\"form-group\">
-                   <label for=\"car\">Автомобиль</label>";
+                <div class=\"form-group row\">
+                   <label for=\"car\" class=\"col-form-label col-sm-2\">Автомобиль</label>";
                     
 
             require_once '../Classes/Product.php';
@@ -179,7 +189,7 @@ ORDERS;
             $cars = $car->ShowProducts();
             $carsLength = count($cars);
             if ($cars) {
-                print "<select id=\"car\" class=\"form-control\">";
+                print "<select id=\"car\" class=\"form-control col-sm-4\">";
                 for ($i=0; $i < $carsLength; $i++) { 
                     print "<option value=\"{$cars[$i]->id}\">{$cars[$i]->Model} ({$cars[$i]->Type})</option>";
                 }
@@ -188,19 +198,14 @@ ORDERS;
                 print "<div>Для оформления заказа сначала добавьте автомобиль в разделе <a href='products.php'><strong>Автомобили</strong></a></div>";
             }
             print "</div>
-                <div class=\"form-group\">
-                    <label for=\"hours\">Количество часов</label>
-                    <input class=\"form-control\" id=\"hours\">
+                <div class=\"form-group row\">
+                    <label for=\"hours\" class=\"col-sm-2 col-form-label\">Количество часов</label>
+                    <input class=\"form-control col-sm-4\" id=\"hours\">
                 </div>
                 <button type=\"button\" id=\"btnSubmit\" class=\"btn btn-success\">Отправить</button>    
                 </form>
             </div>
-            <div class=\"find-order-container\">                
-                <form method=\"GET\">
-                    <input class=\"form-control\" type=\"text\" id=\"order\" placeholder=\"Введите фамилию клиента\">
-                    <button id=\"btn-find-order\" class=\"btn btn-primary\">Найти</button>
-                </form>
-            </div>
+            
             <div>
                 <h2>Заказы</h2>";
 
