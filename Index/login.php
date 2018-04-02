@@ -4,7 +4,7 @@
             $user = json_decode($_POST['user']);
             function GetUserByLogin($user)
             {
-                require_once '../DbConnect.php';
+                require_once '../Classes/DbConnect.php';
                 $db = DbConnect();
                 $userQuery = $db->prepare("SELECT * FROM users WHERE Login = ?");
                 $userQuery->execute(array($user->login));

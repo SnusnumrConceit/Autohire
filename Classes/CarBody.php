@@ -10,7 +10,7 @@ class CarBody implements ICarBody {
 
 public function CreateBody($carBody)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $carBody, 'create')) {
             $createBodyQuery = $db->prepare("INSERT INTO carbodies VALUES (?, ?, ?, ?, ?)");
@@ -20,7 +20,7 @@ public function CreateBody($carBody)
 
     public function DeleteBody($id)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $deleteBodyQuery = $db->prepare("DELETE FROM carbodies WHERE id = ?");
         $deleteBodyQuery->execute(array($id));        
@@ -28,7 +28,7 @@ public function CreateBody($carBody)
 
     public function FindBody($body)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $findBodyQuery = $db->prepare("SELECT * FROM carbodies WHERE Type = ?");
         $findBodyQuery->execute(array($body));        
@@ -42,7 +42,7 @@ public function CreateBody($carBody)
 
     public function GetBody($id)
     {
-        require_once '../../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $getBodyQuery = $db->prepare('SELECT * FROM carbodies WHERE id = ?');
         $getBodyQuery->execute(array($id));
@@ -57,7 +57,7 @@ public function CreateBody($carBody)
 
     public function UpdateBody($carBody)
     {
-        require_once '../../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $carBody, 'update')) {
             $updateBodyQuery = $db->prepare("UPDATE carbodies SET Type = ?, Oil = ?, Transmission = ?, Control = ? WHERE id = ?");
@@ -136,7 +136,7 @@ public function CreateBody($carBody)
 
     public function ShowBodies()
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $selectBodiesQuery = $db->prepare("SELECT * FROM carbodies");
         $selectBodiesQuery->execute();

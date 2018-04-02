@@ -6,9 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $order = new Order();
             if ($order->CheckData($inputData)) {
                 $order = $order->SetData($inputData, $order);
-                require_once '../DbConnect.php';
-                $db = DbConnect();
-                $order->CreateOrder($order, $db);    
+                $order->CreateOrder($order);    
             }            
         } 
         elseif ($_POST['id'] ?? '') {
@@ -65,7 +63,6 @@ ORDERS;
             require_once '../Classes/Product.php';
             $car = new Product();
             $cars = $car->ShowProducts();
-            $carsLength = count($cars);
             if ($cars) {
                 print "<select id=\"car\" class=\"form-control\">";
                 for ($i=0; $i < $carsLength; $i++) { 
@@ -94,8 +91,8 @@ ORDERS;
                 require_once '../Classes/Order.php';
                 $orders = new Order();
                 $orders = $orders->FindOrder($inputData);
-                $findlessLength = count($orders);
                 if ($orders) {
+                    $findlessLength = count($orders);
                     print "<table class=\"table table-bordered\">
                                         <thead>
                                             <th>id</th>

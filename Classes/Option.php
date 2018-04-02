@@ -2,7 +2,7 @@
 class Option implements IOption{
     public function CreateOption($option)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $option, 'create')) {
             $insertOptionQuery = $db->prepare("INSERT INTO options VALUES (?,?)");
@@ -12,7 +12,7 @@ class Option implements IOption{
 
     public function DeleteOption($id)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $deleteOptionQuery = $db->prepare("DELETE FROM options WHERE id =?");
         $deleteOptionQuery->execute(array($id));
@@ -20,7 +20,7 @@ class Option implements IOption{
 
     public function UpdateOption($option)
     {
-        require_once '../../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $option, 'update')) {
             $updateOptionQuery = $db->prepare("UPDATE options SET Title = ? WHERE id = ?");
@@ -31,7 +31,7 @@ class Option implements IOption{
 
     public function FindOption($option)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $findOptionQuery = $db->prepare('SELECT * FROM options WHERE Title = ?');
         $findOptionQuery->execute(array($option));        
@@ -52,7 +52,7 @@ class Option implements IOption{
 
     public function GetOption($id)
     {
-        require_once '../../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $getOptionQuery = $db->prepare("SELECT * FROM options WHERE id = ?");
         $getOptionQuery->execute(array($id));
@@ -66,7 +66,7 @@ class Option implements IOption{
 
     public function ShowOptions()
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $selectOptionQuery = $db->prepare("SELECT * FROM options");
         $selectOptionQuery->execute();

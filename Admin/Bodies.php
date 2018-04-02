@@ -85,8 +85,8 @@ CARBODIES;
             require_once '../Classes/CarBody.php';
                         $bodies = new CarBody();
                         $bodies = $bodies->FindBody($inputData);
-                        $bodiesLength = count($bodies);
                         if ($bodies) {
+                            $bodiesLength = count($bodies);
                             print "<table class=\"table table-bordered\">
                                     <thead>
                                         <th>id</th>

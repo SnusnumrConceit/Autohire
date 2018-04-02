@@ -17,7 +17,8 @@
     </head>
     <body>
          <div class="container">
-                <h2>Пользователь: </h2>
+                <a class="btn btn-default" href="../products.php">Назад</a>
+                <h2>Пользователь {$user[0]->Login}</h2>
                 <form method="POST">
                     <div class="form-group">
                         <label for="login">Логин</label>

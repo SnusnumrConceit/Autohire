@@ -2,7 +2,7 @@
 class Brand implements IBrand{
     public function CreateBrand($brand)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $brand, 'create')) {
             $insertBrandQuery = $db->prepare("INSERT INTO brands VALUES (?,?)");
@@ -12,7 +12,7 @@ class Brand implements IBrand{
 
     public function DeleteBrand($id)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $deleteBrandQuery = $db->prepare("DELETE FROM brands WHERE id = ?");
         $deleteBrandQuery->execute(array($id));
@@ -20,7 +20,7 @@ class Brand implements IBrand{
 
     public function UpdateBrand($brand)
     {
-        require_once '../../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $brand, 'update')) {
             $updateBrandQuery = $db->prepare("UPDATE brands SET Title = ? WHERE id = ?");
@@ -30,7 +30,7 @@ class Brand implements IBrand{
 
     public function FindBrand($brand)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $findBrandQuery = $db->prepare('SELECT * FROM brands WHERE Title = ?');
         $findBrandQuery->execute(array($brand));        
@@ -77,7 +77,7 @@ class Brand implements IBrand{
 
     public function GetBrand($id)
     {
-        require_once '../../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $getBrandQuery = $db->prepare("SELECT * FROM brands WHERE id = ?");
         $getBrandQuery->execute(array($id));
@@ -91,7 +91,7 @@ class Brand implements IBrand{
 
     public function ShowBrands()
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $selectBrandQuery = $db->prepare("SELECT * FROM brands");
         $selectBrandQuery->execute();

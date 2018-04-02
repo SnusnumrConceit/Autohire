@@ -1,7 +1,8 @@
 <?php
 class Order implements IOrder {
-    public function CreateOrder($order, $db)
+    public function CreateOrder($order)
     {
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $order)) {
             $createOrderQuery = $db->prepare("INSERT INTO orders VALUES (?, ?, ?, ?)");
@@ -11,7 +12,7 @@ class Order implements IOrder {
 
     public function GetOrder($id)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $selectOrderQuery = $db->prepare("SELECT * FROM orders WHERE id = ?");
         $selectOrderQuery->execute(array($id));
         $order = $selectOrderQuery->fetchAll(PDO::FETCH_OBJ);
@@ -25,7 +26,7 @@ class Order implements IOrder {
 
     public function DeleteOrder($id)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $deleteOrderQuery = $db->prepare("DELETE FROM orders WHERE id = ?");
         $deleteOrderQuery->execute(array($id));
@@ -56,7 +57,7 @@ class Order implements IOrder {
 
     public function FindOrder($order)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $findOrderQuery = $db->prepare("SELECT ord.id, u.Login, concat(u.LName, ' ', U.FName, ' ', u.MName) AS User, m.Title AS Model, cb.Type, pr.Price FROM orders AS ord INNER JOIN users AS u ON ord.User_id = u.id INNER JOIN products AS pr ON ord.Product_id = pr.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id WHERE u.LName = ?");
         $findOrderQuery->execute(array($order));        
@@ -70,7 +71,7 @@ class Order implements IOrder {
 
     public function ShowOrders()
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         #закончить заказ до конца
         $selectOrdersQuery = $db->prepare("SELECT ord.id, u.Login, concat(u.LName, ' ', U.FName, ' ', u.MName) AS User, m.Title AS Model, cb.Type, pr.Price, ord.Hours FROM orders AS ord INNER JOIN users AS u ON ord.User_id = u.id INNER JOIN products AS pr ON ord.Product_id = pr.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id");
@@ -139,7 +140,7 @@ class Order implements IOrder {
 }
 
 interface IOrder {
-    function CreateOrder($order, $db);
+    function CreateOrder($order);
     
     function GetOrder($id);
 

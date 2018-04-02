@@ -79,7 +79,8 @@ USER;
                     require_once '../Classes/User.php';
                     $user = new User();
                     $findlessUsers = $user->FindUser($inputData);            
-                    if ($findlessUsers) {       
+                    if ($findlessUsers) {
+                        $usersLength = count($findlessUsers);
                         print "<table class=\"table table-bordered\">
                                         <thead>
                                             <th>id</th>
@@ -92,7 +93,7 @@ USER;
                                         </thead>
                                         <tbody>";
 
-                    for ($i=0; $i < count($findlessUsers); $i++) { 
+                    for ($i=0; $i < $usersLength; $i++) { 
                         print "<tr>
                                 <td>{$findlessUsers[$i]->id}</td>
                                 <td>{$findlessUsers[$i]->Login}</td>

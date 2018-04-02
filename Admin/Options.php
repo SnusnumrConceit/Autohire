@@ -54,8 +54,8 @@ OPTION;
                     require_once '../Classes/Option.php';
                     $option = new Option();
                     $options = $option->FindOption($inputData);
-                    $findlessLength = count($options);
                     if ($options) {
+                        $findlessLength = count($options);
                         print "<table class=\"table table-bordered\">
                                     <thead>
                                         <th>id</th>

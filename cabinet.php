@@ -18,7 +18,7 @@ USER_CABINET;
         foreach ($_COOKIE['Account'] as $key => $value) {
             $user_id = $key;
         }
-        require_once 'DbConnect.php';
+        require_once 'Classes/DbConnect.php';
         $db = DbConnect();
         $findOrderQuery = $db->prepare("SELECT ord.id, concat(u.LName, ' ', U.FName, ' ', u.MName) AS User, m.Title AS Model, cb.Type, pr.Price FROM orders AS ord INNER JOIN users AS u ON ord.User_id = u.id INNER JOIN products AS pr ON ord.Product_id = pr.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id WHERE u.id = ?");
         $findOrderQuery->execute(array($user_id));

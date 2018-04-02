@@ -1,15 +1,6 @@
-var btnEdit = $('.btn-warning'),
-    btnDelete = $('.btn-danger'),
-    btnSubmit = $('#btnSubmit'),
-    btnFind = $('#btn-find-product');
-
-    $('.create-product-container').css('display', 'none');
-    $('#btn-open-create-product-container').click(function () {  
-        $('.create-product-container').slideToggle();
-    }) 
-
-    btnSubmit.click(function () { 
-    var photo = $('#photo').prop("files")[0],
+$('#btnSubmit').click(function () { 
+    var id = window.location.search.split('='),
+        photo = $('#photo').prop("files")[0],
         brand = $('#brand').val(),
         model = $('#model').val(),
         body = $('#car-body').val(),
@@ -18,7 +9,7 @@ var btnEdit = $('.btn-warning'),
         $(':checkbox:checked').each(function () {  
             options.push(this.value);
         })
-        product = new Product(photo, brand, model, body, price, options),
+        product = new Product(id, photo, brand, model, body, price, options),
         formData = new FormData();
         
         if (CheckData(product)) {
@@ -27,7 +18,7 @@ var btnEdit = $('.btn-warning'),
             formData.append('product', product);
             $.ajax(
                 {
-                    url: 'products.php',                    
+                    url: 'productinfo.php',                    
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -36,14 +27,15 @@ var btnEdit = $('.btn-warning'),
                         if (response.length != 0) {
                             alert(response);
                         } else {
-                            window.location.reload();                
+                            window.location.href='../products.php';                
                         }           
                     }    
                 }
             )
         }
 
-    function Product(photo, brand, model, body, price, options) { 
+    function Product(id, photo = null, brand, model, body, price, options) { 
+        this.id = id[1],
         this.photo = photo,
         this.brand = brand,
         this.model = model,
@@ -53,8 +45,7 @@ var btnEdit = $('.btn-warning'),
      }
     function CheckData(product) {
         try {            
-            if (product.photo !== null && product.photo !== undefined && product.photo !== '' &&
-                product.brand !== null && product.brand !== undefined && product.brand !== '' &&
+            if (product.brand !== null && product.brand !== undefined && product.brand !== '' &&
                 product.model !== null && product.model !== undefined && product.model !=='' &&
                 product.body !== null  && product.body !== undefined && product.body !=='' &&
                 product.price !== null && product.price !== undefined && product.price !=='') {
@@ -72,10 +63,6 @@ var btnEdit = $('.btn-warning'),
             }    
         } catch (error) {
             if (error.message === "Empty Data Error") {
-                if (product.photo === null || product.photo === undefined || product.photo === '') {
-                    alert("Вы не загрузили картинку!");
-                }
-
                 if (product.brand === null || product.brand === undefined || product.brand === '') {
                     alert("Пришли неверные данные о выбранной марке автомобиля!");
                 }
@@ -107,43 +94,3 @@ var btnEdit = $('.btn-warning'),
         
     }
  })
-
-//поиск по модели автомобиля
-btnFind.click(function () {  
-    var product = $('#product').val();
-    $.get('products.php', {product: product}, function (response) {  
-        if (response.length != 0) {
-            window.location.href = 'products.php?product=' + product;
-        }
-    })
-})
-
-btnEdit.click(function () {
-    for (var i = 0; i < btnEdit.length; i++) {
-        if (btnEdit[i] == event.target) {
-            var position = i + 1;
-            product_id = $('table tr:nth-child(' + position + ') td:first-child').text();            
-            window.location.href = "Edit/Productinfo.php?product=" + product_id;
-        }
-        
-    }
-})
-
-btnDelete.click(function () {  
-    for (var i = 0; i < btnDelete.length; i++) {
-        if (event.target == btnDelete[i]) {
-            var position = i + 1,
-                product_id = $('table tr:nth-child(' + position + ') td:first-child').text();            
-            
-            $.post('products.php', {id: product_id}, function (response) { 
-                if (response.length != 0) {
-                    alert(response);
-                } else {
-                    window.location.reload();     
-                }
-                
-            })
-        }
-        
-    }
-})

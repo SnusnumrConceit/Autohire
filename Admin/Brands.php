@@ -60,8 +60,8 @@ OPTION;
                     require_once '../Classes/Brand.php';
                     $brand = new Brand();
                     $brands = $brand->FindBrand($inputData);
-                    $findlessLength = count($brands);
                     if ($brands) {
+                        $findlessLength = count($brands);
                         print "<table class=\"table table-bordered\">
                                     <thead>
                                         <th>id</th>

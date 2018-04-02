@@ -17,6 +17,7 @@
     </head>
     <body>
         <div class="container">
+            <a class="btn btn-default" href="../products.php">Назад</a>
             <h2>Модель {$brand[0]->Title}</h2>
             <form>
                 <div class="from-group">

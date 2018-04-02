@@ -115,7 +115,8 @@ PRODUCTS;
             require_once '../Classes/Product.php';
             $product = new Product();
             $findlessProducts = $product->FindProduct($inputData);            
-            if ($findlessProducts) {                
+            if ($findlessProducts) {
+                $productsLength = count($findlessProducts);
                 print "<table class=\"table table-bordered\">
                                         <thead>
                                             <th>id</th>
@@ -130,7 +131,7 @@ PRODUCTS;
                                             <th>Операции</th>
                                     </thead>
                                         <tbody>";
-                    for ($i=0; $i < count($findlessProducts); $i++) { 
+                    for ($i=0; $i < $productsLength; $i++) { 
                         print "<tr>
                                     <td>{$findlessProducts[$i]->id}</td>
                                     <td><img src=\"data:image/jpg;base64,{$findlessProducts[$i]->Photo}\"></td>

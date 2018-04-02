@@ -17,6 +17,7 @@
     </head>
     <body>
         <div class="container">
+            <a class="btn btn-default" href="../products.php">Назад</a>
             <h2>Кузов {$body[0]->Type} {$body[0]->Transmission}</h2>
             <form method="POST">
                     <div class="form-group">

@@ -60,8 +60,8 @@ OPTION;
                     require_once '../Classes/Model.php';
                     $model = new Model();
                     $models = $model->FindModel($inputData);
-                    $findlessLength = count($models);
                     if ($models) {
+                        $findlessLength = count($models);
                         print "<table class=\"table table-bordered\">
                                     <thead>
                                         <th>id</th>

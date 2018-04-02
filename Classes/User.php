@@ -11,17 +11,20 @@ class User implements IUser{
 
     public function CreateUser($user)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $user, 'create')) {
             $createUserQuery = $db->prepare("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)");
             $createUserQuery->execute(array($user->id, $user->login, $user->password, $user->lastName, $user->firstName, $user->middleName, $user->phoneNumber));
-        } 
+        }
+        if (substr($_SERVER['HTTP_REFERER'], -9, 9) === 'index.php') {
+            setcookie("Account[{$user->id}]", $user->password, time() + 3600, '/');
+        }
     }
 
     public function DeleteUser($id)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $deleteUserQuery = $db->prepare("DELETE FROM users WHERE id = ?");
         $deleteUserQuery->execute(array($id));        
@@ -32,7 +35,7 @@ class User implements IUser{
         /*if (substr($_SERVER['HTTP_REFERER'], -9, 9) === 'index.php') {
             
         } else {//if (substr($_SERVER['HTTP_REFERER'], -12, 12) === 'userinfo.php') {
-            require_once '../../DbConnect.php';
+            require_once 'DbConnect.php';
         }*/
         require_once 'DbConnect.php';
         $db = DbConnect();
@@ -42,14 +45,14 @@ class User implements IUser{
         if (count($selectedUserQuery) == 1)   {
             return $selectedUserQuery;
         } else {
-            echo("Данный кузов не найден");
+            echo("Данный пользователь не найден");
         }
         
     }
 
     public function FindUser($lastName)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $findUserQuery = $db->prepare('SELECT * FROM users WHERE LName = ?');
         $findUserQuery->execute(array($lastName));
@@ -63,7 +66,7 @@ class User implements IUser{
     }
     public function UpdateUser($user)
     {
-        require_once '../../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $user, 'update')) {
             $updateUserQuery = $db->prepare("UPDATE users SET Login = ?, LName = ?, FName = ?, MName = ? WHERE id = ?");
@@ -278,7 +281,7 @@ class User implements IUser{
 
     public function ShowUsers()
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $selectUsersQuery = $db->prepare("SELECT * FROM users");
         $selectUsersQuery->execute();

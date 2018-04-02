@@ -7,7 +7,7 @@ class Model implements IModel {
 
     public function ShowModels()
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $selectModelsQuery = $db->prepare('SELECT * FROM models');
         $selectModelsQuery->execute();
@@ -24,7 +24,7 @@ class Model implements IModel {
 
     public function CreateModel($model)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $model, 'create')) {
             $insertModelQuery = $db->prepare("INSERT INTO models VALUES (?, ?)");
@@ -34,7 +34,7 @@ class Model implements IModel {
     }
 
     public function UpdateModel($model) {
-        require_once '../../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if($this->CheckDublicates($db, $model, 'update')) {
             $updateModelQuery = $db->prepare("UPDATE models SET Title = ? WHERE id = ?");
@@ -68,7 +68,7 @@ class Model implements IModel {
         }
     }
     public function DeleteModel($id) {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();                
         $deleteModelQuery = $db->prepare("DELETE FROM models WHERE id = ?");
         $deleteModelQuery->execute(array($id));
@@ -76,7 +76,7 @@ class Model implements IModel {
 
     public function FindModel($model)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $findModelQuery = $db->prepare('SELECT * FROM models WHERE Title = ?');
         $findModelQuery->execute(array($model));        
@@ -90,7 +90,7 @@ class Model implements IModel {
 
     public function GetModel($id)
     {        
-        require_once '../../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $getModelQuery = $db->prepare('SELECT * FROM models WHERE id = ?');
         $getModelQuery->execute(array($id));

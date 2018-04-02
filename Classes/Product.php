@@ -2,20 +2,12 @@
 class Product implements IProduct {
     public function CreateProduct($product)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $product, 'create')) {
             $createProductQuery = $db->prepare("INSERT INTO products VALUES (?, ?, ?, ?, ?, ?)");
             $createProductQuery->execute(array($product->id, $product->brand, $product->model, $product->price, $product->photo, $product->body));
-            if ($product->options ?? '') {
-                $clearCharacteristics = $db->prepare("DELETE FROM characteristics WHERE Product_id = ?");
-                $clearCharacteristics->execute(array($product->id));
-                $options = count($product->options);
-                $createCharacteritics = $db->prepare("INSERT INTO characteristics VALUES (?,?)");
-                for ($i=0; $i < $options; $i++) { 
-                    $createCharacteritics->execute(array($product->id, $product->options[$i]));
-                }
-            }
+            $this->UpdateOptions($db, $product);
         }
     }
 
@@ -46,7 +38,7 @@ class Product implements IProduct {
 
     public function DeleteProduct($id)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $deleteProductQuery = $db->prepare("DELETE FROM products WHERE id = ?");
         $deleteProductQuery->execute(array($id));
@@ -54,16 +46,33 @@ class Product implements IProduct {
 
     public function UpdateProduct($product)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         //дописать логику для варианта без фотки
         if ($this->CheckDublicates($db, $product, 'update')) {
-            $updateProductQuery = $db->prepare('UPDATE products SET Brand_id = ? AND Model_id = ? AND Price = ? AND Photo = ? AND CarBody_id = ? WHERE id = ?');
-            $updateProductQuery->execute(array($product->brand, $product->model, $product->price, $product->photo, $product->body));
+            if ($product->photo ?? '') {
+                $updateProductQuery = $db->prepare('UPDATE products SET Brand_id = ?, Model_id = ?, Price = ?, Photo = ?, CarBody_id = ? WHERE id = ?');
+                $updateProductQuery->execute(array($product->brand, $product->model, $product->price, $product->photo, $product->body, $product->id));
+                $this->UpdateOptions($db, $product);
+            } else {
+                $updateProductQuery = $db->prepare('UPDATE products SET Brand_id = ?, Model_id = ?, Price = ?, CarBody_id = ? WHERE id = ?');
+                $updateProductQuery->execute(array($product->brand, $product->model, $product->price, $product->body, $product->id));
+                $this->UpdateOptions($db, $product);
+            }
         }
         
     }
-    
+    protected function UpdateOptions($db, $product){
+        if ($product->options ?? '') {
+                $clearCharacteristics = $db->prepare("DELETE FROM characteristics WHERE Product_id = ?");
+                $clearCharacteristics->execute(array($product->id));
+                $options = count($product->options);
+                $createCharacteritics = $db->prepare("INSERT INTO characteristics VALUES (?,?)");
+                for ($i=0; $i < $options; $i++) { 
+                    $createCharacteritics->execute(array($product->id, $product->options[$i]));
+                }
+            }
+    }
     protected function CheckDublicates($db, $product, $pointer)
     {
         if ($pointer === 'create') {
@@ -78,8 +87,8 @@ class Product implements IProduct {
             }            
         }
         elseif ($pointer === 'update') {
-            $getProductQuery = $db->prepare("SELECT * from products WHERE Login = ?");
-            $getProductQuery->execute(array($product->login));
+            $getProductQuery = $db->prepare("SELECT * from products WHERE Model_id = ? AND CarBody_id = ?");
+            $getProductQuery->execute(array($product->model, $product->body));
             $currentProduct = $getProductQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentProduct) == 0 || count($currentProduct) == 1) {
                 return true;
@@ -92,7 +101,7 @@ class Product implements IProduct {
 
     public function FindProduct($product)
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $findProductQuery = $db->prepare('SELECT pr.id, b.Title AS Brand, m.Title AS Model, pr.Price, pr.Photo, cb.Type, cb.Oil, cb.Transmission, cb.Control  FROM products AS pr INNER JOIN brands AS b ON pr.Brand_id = b.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id WHERE m.Title = ?');
         $findProductQuery->execute(array($product));        
@@ -106,7 +115,7 @@ class Product implements IProduct {
 
     public function ShowProducts()
     {
-        require_once '../DbConnect.php';
+        require_once 'DbConnect.php';
         $db = DbConnect();
         $selectProductsQuery = $db->prepare("SELECT pr.id, b.Title AS Brand, m.Title AS Model, pr.Price, pr.Photo, cb.Type, cb.Oil, cb.Transmission, cb.Control  FROM products AS pr INNER JOIN brands AS b ON pr.Brand_id = b.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id");
         $selectProductsQuery->execute();
@@ -145,33 +154,36 @@ class Product implements IProduct {
         try {
             if (($photo ?? '') && ($product->brand ?? '') &&($product->model ?? '') &&($product->body ?? '') &&($product->price ?? '')) {
                 if (is_uploaded_file($photo['tmp_name'])) {
-                    $fileExtension = substr($photo['name'],-3,3);
-                    $arrExtensions = ['jpg', 'png'];
-                    if (in_array($fileExtension,$arrExtensions)) {
-                        if (strlen($product->price) <= 4 && strlen($product->price) >= 3) {
-                            if (is_numeric($product->price)) {
-                                if (trim($product->price) == $product->price) {
-                                    if (htmlentities($product->price) == $product->price) {
-                                        return true;
+                    if ($photo['size'] < 2*1024*1024) {
+                        $fileExtension = substr($photo['name'],-3,3);
+                        $arrExtensions = ['jpg', 'png', 'JPG', '.PNG'];
+                        if (in_array($fileExtension,$arrExtensions)) {
+                            if (strlen($product->price) <= 4 && strlen($product->price) >= 3) {
+                                if (is_numeric($product->price)) {
+                                    if (trim($product->price) == $product->price) {
+                                        if (htmlentities($product->price) == $product->price) {
+                                            return true;
+                                        } else {
+                                            throw new Exception("Wrong Data Error", 1);
+                                        }
                                     } else {
                                         throw new Exception("Wrong Data Error", 1);
-                                    }
+                                    }    
                                 } else {
                                     throw new Exception("Wrong Data Error", 1);
-                                }    
+                                }
+                                
                             } else {
-                                throw new Exception("Wrong Data Error", 1);
+                                throw new Exception("Data Length Error", 1);                   
                             }
-                            
                         } else {
-                            throw new Exception("Data Length Error", 1);                   
-                        }
+                            throw new Exception("Image Extension Error", 1);
+                        }                    
                     } else {
-                        throw new Exception("Image Extension Error", 1);
-                    }                    
+                        throw new Exception('Image Size Error', 1);   
+                    }
                 } else {
                     throw new Exception("Image Download Error", 1);
-                    
                 }
             } else {
                 throw new Exception("Empty Data Error", 1);                
@@ -200,6 +212,10 @@ class Product implements IProduct {
                     echo("Вы не указали цену проката!\n");
                 }
                 return false;
+            }
+
+            if ($error->getMessage() === 'Image Size Error') {
+                echo("Размер файла не должен превышать 2 МБайт!");
             }
             
             if ($error->getMessage() === 'Data Length Error') {
