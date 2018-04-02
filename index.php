@@ -12,17 +12,26 @@
         <link rel="stylesheet" href="Styles/index.css">
     </head>
     <body>
+        <div class="container-fluid">
         <?php
             require_once 'header.php';
             
             require_once 'Classes/Product.php';
-            print "<main class=\"container\">";
+            print "<div class=\"container\" id=\"main\">";
             $product = new Product();
             $products = $product->ShowProducts();
             if ($products) {
                 $productsLength = count($products);
                 //типа оставшиеся товары
                 $lostProducts = $productsLength;
+                require_once 'wideimage/lib/wideimage.php';
+                for ($i=0; $i < $productsLength; $i++) { 
+                    $img = base64_decode($products[$i]->Photo);
+                    $img = WideImage::load($img);
+                    $img->resize(348, 261);
+                    $img = base64_encode($img);
+                    $products[$i]->Photo = $img;
+                }
                 for ($i=0; $i < $productsLength;) {
                     if ($lostProducts % 3 == 0) {
                         print "<div class=\"row\">
@@ -86,7 +95,8 @@
 
                 }
             }
-            print "</main>";
+            print "</div>
+            </div>";
             require_once 'footer.php';
         ?>
 

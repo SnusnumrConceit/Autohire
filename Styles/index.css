@@ -3,9 +3,12 @@
     height: 200px;
 }
 
-.header-main-container .nav-item .nav-link {
-    color: #fff;
-    
+.header-main-container .navbar {
+    padding: 8px 0px;
+}
+
+.header-main-container .nav-item a {
+    color:#fff;
 }
 
 .header-main-container .nav-item:hover {
@@ -25,6 +28,17 @@ footer {
  background-color: #026aa7;    
 }
 
-main.container {
+.container {
     margin-top: 30px;
+    margin-bottom: 60px;
+}
+
+.current {
+    background-color:#fff;
+}
+
+
+.thead-default {
+    background-color: #026aa7;
+    color: #fff;
 }

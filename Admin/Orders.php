@@ -53,8 +53,8 @@ ORDERS;
             require_once '../Classes/User.php';
             $user = new User();
             $users = $user->ShowUsers();
-            $usersLength = count($users);
             if ($users) {
+                $usersLength = count($users);
                 print "<select id=\"user\" class=\"form-control col-sm-4\">";
                 for ($i=0; $i < $usersLength; $i++) { 
                     print "<option value=\"{$users[$i]->id}\">{$users[$i]->Login} ({$users[$i]->LName} {$users[$i]->FName} {$users[$i]->MName})</option>";
@@ -169,8 +169,8 @@ ORDERS;
             require_once '../Classes/User.php';
             $user = new User();
             $users = $user->ShowUsers();
-            $usersLength = count($users);
             if ($users) {
+                $usersLength = count($users);
                 print "<select id=\"user\" class=\"form-control col-sm-4\">";
                 for ($i=0; $i < $usersLength; $i++) { 
                     print "<option value=\"{$users[$i]->id}\">{$users[$i]->Login} ({$users[$i]->LName} {$users[$i]->FName} {$users[$i]->MName})</option>";
@@ -187,8 +187,8 @@ ORDERS;
             require_once '../Classes/Product.php';
             $car = new Product();
             $cars = $car->ShowProducts();
-            $carsLength = count($cars);
             if ($cars) {
+                $carsLength = count($cars);
                 print "<select id=\"car\" class=\"form-control col-sm-4\">";
                 for ($i=0; $i < $carsLength; $i++) { 
                     print "<option value=\"{$cars[$i]->id}\">{$cars[$i]->Model} ({$cars[$i]->Type})</option>";
@@ -212,8 +212,8 @@ ORDERS;
                 require_once '../Classes/Order.php';
                 $order = new Order();
                 $orders = $order->ShowOrders();
-                $ordersLength = count($orders);
                 if ($orders) {
+                    $ordersLength = count($orders);
                     print "<table class=\"table table-bordered\">
                                         <thead>
                                             <th>id</th>

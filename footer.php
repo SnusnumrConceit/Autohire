@@ -8,3 +8,4 @@
         <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
         <script src="Scripts/registration_scripts.js"></script>
         <script src="Scripts/login_scripts.js"></script>
+        <script src="Scripts/ui_scripts.js"></script>

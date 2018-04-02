@@ -10,13 +10,13 @@
 ?>
 <header class="header">
   <div class="row">
-    <nav class="navbar navbar-expand-sm navbar-dark bg-primary col">
+    <nav class="navbar navbar-expand-sm navbar-primary bg-light col">
         <ul class="nav navbar-nav justify-content-center">
         <?php                        
             if ($currentUser[0] ?? '') {
               print <<<LOGGED_PANEL
-                <li class="nav-item"><a class="nav-link text-white" href="cabinet.php?user={$currentUser[0]->id}">{$currentUser[0]->Login}</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="Index/Logout.php">Выйти</a></li>    
+                <li class="nav-item"><a class="nav-link" href="cabinet.php?user={$currentUser[0]->id}">{$currentUser[0]->Login}</a></li>
+                <li class="nav-item"><a class="nav-link" href="Index/Logout.php">Выйти</a></li>    
 LOGGED_PANEL;
             } else {
               print <<<UNLOGGED_PANEL
@@ -28,14 +28,14 @@ UNLOGGED_PANEL;
     </nav>
     </div>
     <div class="row">
-      <div class="header-main-container sticky-top col">
+      <div class="header-main-container sticky-top w-100">
         <div class="logo" style="height: 152px;"><!--<img src="сюда воткнёшь ссылку на лого" alt="АвтоПрокат">--></div>
         <nav class="navbar navbar-expand-sm">
-          <ul class="nav navbar-nav w-100 row justify-content-center">
-              <li class="nav-item col-2 text-sm-center"><a class="nav-link" href="#">О нас</a></li>
-              <li class="nav-item col-5 text-sm-center"><a class="nav-link" href="#">Автомобильный ряд</a></li>
-              <li class="nav-item col-3 text-sm-center"><a class="nav-link" href="#">Условия аренды</a></li>
-              <li class="nav-item col-2 text-sm-center"><a class="nav-link" href="#">Контакты</a></li>
+          <ul class="nav navbar-nav w-100 justify-content-center" id="navbar">
+              <li class="nav-item col-2 text-sm-center"><a class="nav-link" href="Index/About.php">О нас</a></li>
+              <li class="nav-item col-5 text-sm-center"><a class="nav-link" href="Index/cars.php">Автомобильный ряд</a></li>
+              <li class="nav-item col-3 text-sm-center"><a class="nav-link" href="Index/rent.php">Условия аренды</a></li>
+              <li class="nav-item col-2 text-sm-center"><a class="nav-link" href="Index/Contacts.php">Контакты</a></li>
           </ul>
         </nav>
       </div>

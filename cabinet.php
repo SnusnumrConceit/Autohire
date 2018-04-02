@@ -12,11 +12,13 @@ print <<<USER_CABINET
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="Styles/index.css">
     </head>
-    <body>        
+    <body>  
+        <div class="container-fluid">      
 USER_CABINET;
         require_once 'header.php';
-        print "<div class=\"container\">";
+        print "<div id=\"main\" class=\"container\">";
         foreach ($_COOKIE['Account'] as $key => $value) {
             $user_id = $key;
         }
@@ -54,7 +56,7 @@ USER_CABINET;
         } else {
             echo("<h3>Вы не арендовали ни одного автомобиля!</h3>");
         }
-    print "</div>";
+    print "</div></div>";
     require_once 'footer.php';
     print "<script src=\"Scripts/cabinet_scripts.js\"></script>
     </body>
