@@ -1,4 +1,7 @@
 <?php
+session_start();
+    if ($_SESSION ?? '') {
+        if ($_SESSION['name'] === 'admin') {
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($_GET['body'] ?? '') {
             require_once '../../Classes/CarBody.php';
@@ -17,7 +20,7 @@
     </head>
     <body>
         <div class="container">
-            <a class="btn btn-default" href="../products.php">Назад</a>
+            <a class="btn btn-default" href="../bodies.php">Назад</a>
             <h2>Кузов {$body[0]->Type} {$body[0]->Transmission}</h2>
             <form method="POST">
                     <div class="form-group">
@@ -74,5 +77,11 @@ CAR_BODY;
             }           
         }
     }
+} else {
+        header('location: ../../enter.php');
+    }
+} else {
+    header('location: ../../enter.php');
+}
 ?>
 

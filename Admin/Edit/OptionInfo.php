@@ -1,4 +1,7 @@
 <?php
+session_start();
+    if ($_SESSION ?? '') {
+        if ($_SESSION['name'] === 'admin') {
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($_GET['option'] ?? '') {
             require_once '../../Classes/Option.php';
@@ -17,7 +20,7 @@
     </head>
     <body>
         <div class="container">
-            <a class="btn btn-default" href="../products.php">Назад</a>
+            <a class="btn btn-default" href="../options.php">Назад</a>
             <h2>Модель {$option[0]->Title}</h2>
             <form>
                 <div class="from-group">
@@ -79,7 +82,11 @@ OPTION;
             echo("Вы не ввели название опции автомобиля!");
         }
     }
-
-
+} else {
+        header('location: ../../enter.php');
+    }
+} else {
+    header('location: ../../enter.php');
+}
 ?>
 

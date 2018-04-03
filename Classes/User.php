@@ -45,7 +45,7 @@ class User implements IUser{
         if (count($selectedUserQuery) == 1)   {
             return $selectedUserQuery;
         } else {
-            echo("Данный пользователь не найден");
+            return false;
         }
         
     }

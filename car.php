@@ -8,13 +8,11 @@
                 $inputData = json_decode($_POST['order']);
                 $inputData->user = $user_id;
                 require_once 'Classes/Order.php';
-
                 $order = new Order();
                 if($order->CheckData($inputData)){
                     $order = $order->SetData($inputData, $order);
                     
                     $order->CreateOrder($order);
-                    setcookie("Order[{$order->id}]", md5($order->product_id), time() - 3600, '/');
                 }
             }
         } else {
@@ -25,17 +23,18 @@
     }
 elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
 print "<!DOCTYPE html>
-<html lang=\"en\">
+<html lang='en'>
     <head>
         <title></title>
-        <meta charset=\"UTF-8\">
-        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-        <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css\">
-        <link rel=\"stylesheet\" href=\"Styles/index.css\">
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css'>
+        <link rel='stylesheet' href='Styles/index.css'>
     </head>
-    <body>";
+    <body>
+        <div class='container-fluid'>";
         require_once 'header.php';
-        print "<div class=\"container\">";
+        print "<div class='container' id='main'>";
             if ($_GET['car'] ?? '') {
                 $id = $_GET['car'];
                 require_once 'Classes/Product.php';
@@ -43,24 +42,25 @@ print "<!DOCTYPE html>
                 $product = $product->GetProduct($id);
                 if ($product) {
 print <<<PRODUCT
-                <div class="row"
-                    <div class="photo-container col-sm-8"><img class="img-fluid" src="data:image/jpg;base64,{$product[0]->Photo}"></div>
-                    <div class="functional-container col">
-                        <form method="POST">
-                            <div class="row">
-                                <div class="form-group col">
-                                    <label for="hours">Количество часов</label>
-                                    <input type="number" class="form-control" id="hours" value="1">
-                                </div>
-                                <div class="form-group col">
-                                    <span>Цена: {$product[0]->Price} руб./ч</span>
+                <div class="row">
+                    <div class="row">
+                        <div class="photo-container col">
+                            <img class="img-fluid" src="data:image/jpg;base64,{$product[0]->Photo}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <form method="POST" class='form-inline offset-sm-3 col' style="margin-bottom: 60px; margin-top: 30px;">
+                            <div class="form-group">
+                                    <label class="col-form-label col-4" for="hours">Количество часов</label>
+                                    <input type="number" class="form-control col-2" id="hours" value="1">
+                                    <span class="offset-sm-1" style="margin-right:15px;">Цена: {$product[0]->Price} руб./ч</span>
                                     <button type="button" class="btn btn-primary" id="btn-rent">В аренду</button>
                                 </div>
                             </div>
                         </form>
-                </div>
+                    </div>
                 <div class="row">
-                    <nav class="col-sm-12">
+                    <nav class="col">
                         <ul class="nav nav-tabs nav-justified">
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#main-characteristics">Характеристики</a>
@@ -71,7 +71,7 @@ print <<<PRODUCT
                         </ul>
                     </nav>
                 </div>
-                <div class="tab-content">
+                <div class="tab-content row">
                     <div id="main-characteristics" class="tab-pane active container">
                         <ul>
                             <li>Кузов: {$product[0]->Type}</li>
@@ -97,9 +97,10 @@ PRODUCT;
            print     "</div>
             </div>
         </div>
+        </div>
         </div>";
         require_once 'footer.php';
-    print "<script src=\"Scripts/car_scripts.js\"></script>
+    print "<script src='Scripts/car_scripts.js'></script>
     </body>
 </html>";
 

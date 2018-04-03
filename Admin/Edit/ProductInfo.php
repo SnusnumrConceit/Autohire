@@ -1,4 +1,7 @@
 <?php
+session_start();
+    if ($_SESSION ?? '') {
+        if ($_SESSION['name'] === 'admin') {
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($_GET['product'] ?? '') {
             require_once '../../Classes/Product.php';
@@ -84,27 +87,37 @@ PRODUCT;
                     require_once '../../Classes/Option.php';
                     $option = new Option();
                     $options = $option->ShowOptions();
-                    $optionsLength = count($options);
                     if ($options) {
-                        $optionValidArr = [];
-                        for ($i=0; $i < $optionsLength; $i++) { 
-                            for ($j=0; $j < count($product[0]->Options); $j++) { 
-                                if ($options[$i]->Title == $product[0]->Options[$j]->Title) {
-                                    array_push($optionValidArr, $i);
+                        $optionsLength = count($options);
+                        if ($product[0]->Options ?? '') {
+                            $optionValidArr = [];
+                            for ($i=0; $i < $optionsLength; $i++) { 
+                                for ($j=0; $j < count($product[0]->Options); $j++) { 
+                                    if ($options[$i]->Title == $product[0]->Options[$j]->Title) {
+                                        array_push($optionValidArr, $i);
+                                    }
+                                }
+                                if (in_array($i, $optionValidArr)) {
+                                    print "<div class=\"form-check form-check-inline\">
+                                                <label class=\"form-check-label\">
+                                                    <input type=\"checkbox\" class=\"form-check-input\" value=\"{$options[$i]->id}\" checked>{$options[$i]->Title}
+                                                </label>
+                                            </div>";
+                                } else {
+                                    print "<div class=\"form form-check-inline\">
+                                            <label class=\"form-check-label\">
+                                                <input type=\"checkbox\" class=\"form-check-input\" value=\"{$options[$i]->id}\">{$options[$i]->Title}
+                                            </label>
+                                            </div>";
                                 }
                             }
-                            if (in_array($i, $optionValidArr)) {
-                                print "<div class=\"form-check form-check-inline\">
-                                            <label class=\"form-check-label\">
-                                                <input type=\"checkbox\" class=\"form-check-input\" value=\"{$options[$i]->id}\" checked>{$options[$i]->Title}
-                                            </label>
-                                        </div>";
-                            } else {
+                        } else {
+                            for ($i=0; $i < $optionsLength; $i++) { 
                                 print "<div class=\"form form-check-inline\">
-                                        <label class=\"form-check-label\">
-                                            <input type=\"checkbox\" class=\"form-check-input\" value=\"{$options[$i]->id}\">{$options[$i]->Title}
-                                        </label>
-                                        </div>";
+                                            <label class=\"form-check-label\">
+                                                <input type=\"checkbox\" class=\"form-check-input\" value=\"{$options[$i]->id}\">{$options[$i]->Title}
+                                            </label>
+                                            </div>";
                             }
                         }
                         
@@ -211,4 +224,10 @@ PRODUCT;
         }
         
     }
+} else {
+        header('location: ../../enter.php');
+    }
+} else {
+    header('location: ../../enter.php');
+}
 ?>

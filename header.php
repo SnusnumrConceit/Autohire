@@ -9,9 +9,9 @@
   }
 ?>
 <header class="header">
-  <div class="row">
-    <nav class="navbar navbar-expand-sm navbar-primary bg-light col">
-        <ul class="nav navbar-nav justify-content-center">
+  <div class="header-auth-container row">
+    <nav class="navbar navbar-expand-sm bg-light col h-20">
+        <ul class="nav navbar-nav justify-content-center offset-8">
         <?php                        
             if ($currentUser[0] ?? '') {
               print <<<LOGGED_PANEL

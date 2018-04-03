@@ -1,3 +1,21 @@
+.header-auth-container .nav-item{
+    color: #026aa7;
+}
+
+.header-auth-container .nav-item:hover{
+    color: #fff;
+    background-color: #026aa7;
+}
+
+.header-auth-container .nav-item:active{
+    color: #fff;
+    background-color: #026aa7;
+}
+
+.header-auth-container .nav-item:hover .nav-link {
+    color: #fff;
+}
+
 .header-main-container {
     background-color: #026aa7; 
     height: 200px;
@@ -5,6 +23,14 @@
 
 .header-main-container .navbar {
     padding: 8px 0px;
+}
+
+.header-auth-container .navbar {
+    padding: 0px;
+}
+
+.header-auth-container .navbar-nav {
+    height: 50px;
 }
 
 .header-main-container .nav-item a {

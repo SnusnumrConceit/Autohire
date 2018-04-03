@@ -1,4 +1,7 @@
 <?php
+session_start();
+    if ($_SESSION ?? '') {
+        if ($_SESSION['name'] === 'admin') {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {        
         if ($_POST['order'] ?? '') {
             $inputData = json_decode($_POST['order']);            
@@ -249,6 +252,12 @@ ORDERS;
         <script src=\"../Scripts/orders_scripts.js\"></script>      
     </body>
 </html>";
+        }
     }
+} else {
+        header('location: ../enter.php');
+    }
+} else {
+    header('location: ../enter.php');
 }
 ?>

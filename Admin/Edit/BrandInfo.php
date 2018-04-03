@@ -1,4 +1,7 @@
 <?php
+session_start();
+    if ($_SESSION ?? '') {
+        if ($_SESSION['name'] === 'admin') {
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($_GET['brand'] ?? '') {
             require_once '../../Classes/Brand.php';
@@ -17,7 +20,7 @@
     </head>
     <body>
         <div class="container">
-            <a class="btn btn-default" href="../products.php">Назад</a>
+            <a class="btn btn-default" href="../brands.php">Назад</a>
             <h2>Модель {$brand[0]->Title}</h2>
             <form>
                 <div class="from-group">
@@ -80,5 +83,11 @@ BRAND;
             echo('Вы не ввели название марки автомобиля!');
         }
     }
+} else {
+        header('location: ../../enter.php');
+    }
+} else {
+    header('location: ../../enter.php');
+}
 ?>
 

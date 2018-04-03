@@ -1,4 +1,7 @@
 <?php
+session_start();
+    if ($_SESSION ?? '') {
+        if ($_SESSION['name'] === 'admin') {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($_POST['brand'] ?? '') {
             include_once '../Classes/Brand.php';
@@ -157,6 +160,12 @@ BRANDS;
         <script src=\"../Scripts/brands_scripts.js\"></script>       
     </body>
 </html>";
-}
+        }
+    }
+} else {
+        header('location: ../enter.php');
+    }
+} else {
+    header('location: ../enter.php');
 }
 ?>

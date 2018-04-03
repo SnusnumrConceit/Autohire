@@ -8,7 +8,7 @@
                         if($result){
                             print "<table class='table table-hover'>
                                     <thead class='thead-default'>
-                                        <th class='d-none'>id</th>
+                                        <th class='d-none'></th>
                                         <th>Фото</th>
                                         <th>Название</th>
                                         <th>Основные</th>
@@ -49,9 +49,9 @@
                                         <td>
                                             <form method='POST'>
                                                 <div class='input-group mb-3'>
-                                                    <input type='text' class='form-control' placeholder='Укажите кол-во часов' aria-label='Укажите кол-во часов' aria-describedby='basic-addon2'>
+                                                    <input type='text' class='form-control hours' placeholder='Укажите кол-во часов' aria-label='Укажите кол-во часов' aria-describedby='basic-addon2'>
                                                     <div class='input-group-append'>
-                                                        <button class='btn btn-primary' type='button'>В аренду</button>
+                                                        <button class='btn btn-primary btn-rent' type='button'>В аренду</button>
                                                     </div>
                                                 </div>
                                             </form>

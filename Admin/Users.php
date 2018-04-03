@@ -1,4 +1,7 @@
 <?php
+session_start();
+    if ($_SESSION ?? '') {
+        if ($_SESSION['name'] === 'admin') {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {        
         if ($_POST['user'] ?? '') {
             $inputData = json_decode($_POST['user']);                        
@@ -175,7 +178,6 @@ print <<<USERS
                     <button id="btn-find-user" class="btn btn-primary">Найти</button>
                 </form>
             </div>
-            <button id="btn-csv-user" class="btn btn-default">Выгрузить список пользователей в CSV</button>
             <div>
                 <h2>Пользователи</h2>
 USERS;
@@ -217,6 +219,12 @@ print               "</tbody>
         <script src=\"../Scripts/users_scripts.js\"></script>      
     </body>
 </html>";
+        }
     }
+} else {
+        header('location: ../enter.php');
+    }
+} else {
+    header('location: ../enter.php');
 }
 ?>
