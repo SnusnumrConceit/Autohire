@@ -1,8 +1,9 @@
 
     $('#navbar li a').click(function () {
-    $('#main').empty().append("<div id='loading' class='offset-md-5'><img src='styles/ajax_loader.gif'></div>");
-    $('#navbar li').removeClass('current');
-    $(this).parent().addClass('current');
+    $('#main').empty().append("<div id='loading' class='offset-md-5'><img src='content/ajax_loader.gif'></div>");
+    $('#navbar li').removeClass('active');
+    $(this).parent().addClass('active');
+    
 
     $.ajax({url: this.href, success: function(html) {
         $('#main').empty().append(html);

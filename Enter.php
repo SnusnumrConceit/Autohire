@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (($_POST['login'] ?? '') && ($_POST['pass'] ?? '')) {
         $login = $_POST['login'];
         $password = $_POST['pass'];
-        var_dump($login);
         if (md5($login) === md5('admin') && password_verify($password, password_hash('admin', PASSWORD_DEFAULT))) {
             
             $_SESSION['name'] = 'admin';

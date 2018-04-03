@@ -51,7 +51,7 @@
                                                 <div class='input-group mb-3'>
                                                     <input type='text' class='form-control hours' placeholder='Укажите кол-во часов' aria-label='Укажите кол-во часов' aria-describedby='basic-addon2'>
                                                     <div class='input-group-append'>
-                                                        <button class='btn btn-primary btn-rent' type='button'>В аренду</button>
+                                                        <button class='btn btn-default btn-rent' type='button'>В аренду</button>
                                                     </div>
                                                 </div>
                                             </form>

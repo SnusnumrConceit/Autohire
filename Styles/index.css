@@ -1,4 +1,4 @@
-.header-auth-container .nav-item{
+.header-auth-container .nav-item .nav-link{
     color: #026aa7;
 }
 
@@ -16,6 +16,9 @@
     color: #fff;
 }
 
+.logo {
+    height: 152px;
+}
 .header-main-container {
     background-color: #026aa7; 
     height: 200px;
@@ -59,12 +62,35 @@ footer {
     margin-bottom: 60px;
 }
 
-.current {
+.active {
     background-color:#fff;
+    color:#026aa7;
+}
+
+.active a.nav-link {
+    color:#026aa7;
 }
 
 
 .thead-default {
     background-color: #026aa7;
+    color: #fff;
+}
+
+.btn-default {
+    cursor:pointer;
+    background-color: #026aa7;
+    color: #fff;
+}
+
+.btn-default:hover {
+    
+    background-color: #01598B;
+    color: #fff;
+}
+
+.btn-default:active {
+    
+    background-color: #01598B;
     color: #fff;
 }

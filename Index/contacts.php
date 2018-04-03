@@ -1,6 +1,6 @@
 <h2>Контакты</h2>
 <div class="row">
-    <img src="Styles/ya_map.png" width=1000 height=580 style="max-width: 1000px; max-height:580px; margin-left: 15px;">
+    <img src="Content/ya_map.png" width=1000 height=580 style="max-width: 1000px; max-height:580px; margin-left: 15px;">
 </div>
 <div class="row">
     <section class="col-sm-3">

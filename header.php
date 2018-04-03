@@ -29,7 +29,18 @@ UNLOGGED_PANEL;
     </div>
     <div class="row">
       <div class="header-main-container sticky-top w-100">
-        <div class="logo" style="height: 152px;"><!--<img src="сюда воткнёшь ссылку на лого" alt="АвтоПрокат">--></div>
+        <div class="logo offset-sm-5" style=";">
+          <a href="index.php">
+          <?php
+            require_once 'wideimage/lib/wideimage.php';
+            $img = WideImage::load('Content/autohire.png');
+            $img = $img->resize(160,160);
+            $img = base64_encode($img);
+            
+            print "<img src='data:image/jpg;base64,{$img}' alt='АвтоПрокат'>";
+          ?>
+          </a>
+        </div>
         <nav class="navbar navbar-expand-sm">
           <ul class="nav navbar-nav w-100 justify-content-center" id="navbar">
               <li class="nav-item col-2 text-sm-center"><a class="nav-link" href="Index/About.php">О нас</a></li>
@@ -71,7 +82,7 @@ UNLOGGED_PANEL;
 
       <!-- Модальный футер -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btn-login">Войти</button>
+        <button type="button" class="btn btn-default" id="btn-login">Войти</button>
       </div>
 
     </div>
@@ -126,7 +137,7 @@ UNLOGGED_PANEL;
 
       <!-- Модальный футер -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btn-registration">Зарегистрироваться</button>
+        <button type="button" class="btn btn-default" id="btn-registration">Зарегистрироваться</button>
       </div>
 
     </div>

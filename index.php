@@ -39,21 +39,21 @@
                                     <img class=\"card-img-top\" src=\"data:image/jpeg;base64,{$products[$i]->Photo}\">
                                     <div class=\"card-body\">
                                         <h5 class=\"card-title\">{$products[$i]->Brand} {$products[$i]->Model}</h5>
-                                        <a class=\"btn btn-primary\" href=\"car.php?car={$products[$i]->id}\">Подробнее</a>
+                                        <a class=\"btn btn-default\" href=\"car.php?car={$products[$i]->id}\">Подробнее</a>
                                     </div>
                                 </div>
                                 <div class=\"card col-4\">
                                     <img class=\"card-img-top\" src=\"data:image/jpeg;base64,{$products[$i+1]->Photo}\">
                                     <div class=\"card-body\">
                                         <h5 class=\"card-title\">{$products[$i]->Brand} {$products[$i+1]->Model}</h5>
-                                        <a class=\"btn btn-primary\" href=\"car.php?car={$products[$i+1]->id}\">Подробнее</a>
+                                        <a class=\"btn btn-default\" href=\"car.php?car={$products[$i+1]->id}\">Подробнее</a>
                                     </div>
                                 </div>
                                 <div class=\"card col-4\">
                                     <img class=\"card-img-top\" src=\"data:image/jpeg;base64,{$products[$i+2]->Photo}\">
                                     <div class=\"card-body\">
                                         <h5 class=\"card-title\">{$products[$i+2]->Brand} {$products[$i+2]->Model}</h5>
-                                        <a class=\"btn btn-primary\" href=\"car.php?car={$products[$i+2]->id}\">Подробнее</a>
+                                        <a class=\"btn btn-default\" href=\"car.php?car={$products[$i+2]->id}\">Подробнее</a>
                                     </div>
                                 </div>
                             </div>";    
@@ -66,14 +66,14 @@
                                 <img class=\"card-img-top\" src=\"data:image/jpeg;base64,{$products[$i]->Photo}\">
                                 <div class=\"card-body\">
                                     <h5 class=\"card-title\">{$products[$i]->Brand} {$products[$i]->Model}</h5>
-                                    <a class=\"btn btn-primary\" href=\"car.php?car={$products[$i]->id}\">Подробнее</a>
+                                    <a class=\"btn btn-default\" href=\"car.php?car={$products[$i]->id}\">Подробнее</a>
                                 </div>
                             </div>
                             <div class=\"card col-4\">
                                 <img class=\"card-img-top\" src=\"data:image/jpeg;base64,{$products[$i+1]->Photo}\">
                                 <div class=\"card-body\">
                                     <h5 class=\"card-title\">{$products[$i]->Brand} {$products[$i+1]->Model}</h5>
-                                    <a class=\"btn btn-primary\" href=\"car.php?car={$products[$i+1]->id}\">Подробнее</a>
+                                    <a class=\"btn btn-default\" href=\"car.php?car={$products[$i+1]->id}\">Подробнее</a>
                                 </div>
                             </div>
                             </div>";
@@ -86,7 +86,7 @@
                                 <img class=\"card-img-top\" src=\"data:image/jpeg;base64,{$products[$i]->Photo}\">
                                 <div class=\"card-body\">
                                     <h5 class=\"card-title\">{$products[$i]->Brand} {$products[$i]->Model}</h5>
-                                    <a class=\"btn btn-primary\" href=\"car.php?car={$products[$i]->id}\">Подробнее</a>
+                                    <a class=\"btn btn-default\" href=\"car.php?car={$products[$i]->id}\">Подробнее</a>
                                 </div>
                             </div>
                             </div>";
