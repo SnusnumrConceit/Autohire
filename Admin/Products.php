@@ -9,7 +9,7 @@ session_start();
             require_once '../Classes/Product.php';
             $product = new Product();
             if($product->CheckData($inputData, $photo)) {
-                $product = $product->SetData($inputData, $product, $photo);                
+                $product = $product->SetData($inputData, $photo);                
                 $product->CreateProduct($product);
             }            
         } 
@@ -134,10 +134,15 @@ PRODUCTS;
                                             <th>Операции</th>
                                     </thead>
                                         <tbody>";
+                    require_once '../wideimage/lib/wideimage.php';
                     for ($i=0; $i < $productsLength; $i++) { 
+                        $img = base64_decode($findlessProducts[$i]->Photo);
+                        $img = WideImage::load($img);
+                        $img = $img->resize(180,120);
+                        $img = base64_encode($img);
                         print "<tr>
                                     <td>{$findlessProducts[$i]->id}</td>
-                                    <td><img src=\"data:image/jpg;base64,{$findlessProducts[$i]->Photo}\"></td>
+                                    <td><img src=\"data:image/jpg;base64,{$img}\"></td>
                                     <td>{$findlessProducts[$i]->Brand}</td>                                            
                                     <td>{$findlessProducts[$i]->Model}</td>
                                     <td>{$findlessProducts[$i]->Price}</td>

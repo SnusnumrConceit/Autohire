@@ -1,11 +1,14 @@
 <?php
 class Brand implements IBrand{
+    protected $id;
+    protected $title;
+
     public function CreateBrand($brand)
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $brand, 'create')) {
-            $insertBrandQuery = $db->prepare("INSERT INTO brands VALUES (?,?)");
+            $insertBrandQuery = $db->prepare("CALL spCreateBrand(?,?)");
             $insertBrandQuery->execute(array($brand->id, $brand->title));    
         }
     }
@@ -14,7 +17,7 @@ class Brand implements IBrand{
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $deleteBrandQuery = $db->prepare("DELETE FROM brands WHERE id = ?");
+        $deleteBrandQuery = $db->prepare("CALL spDeleteBrand(?)");
         $deleteBrandQuery->execute(array($id));
     }
 
@@ -23,7 +26,7 @@ class Brand implements IBrand{
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $brand, 'update')) {
-            $updateBrandQuery = $db->prepare("UPDATE brands SET Title = ? WHERE id = ?");
+            $updateBrandQuery = $db->prepare("CALL spUpdateBrand(?,?)");
             $updateBrandQuery->execute(array($brand->title, $brand->id));
         }
     }
@@ -32,7 +35,7 @@ class Brand implements IBrand{
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $findBrandQuery = $db->prepare('SELECT * FROM brands WHERE Title = ?');
+        $findBrandQuery = $db->prepare('SELECT * FROM vbrands WHERE Title = ?');
         $findBrandQuery->execute(array($brand));        
         $currentProduct = $findBrandQuery->fetchAll(PDO::FETCH_OBJ);        
         if (count($currentProduct) != 0) {
@@ -45,7 +48,7 @@ class Brand implements IBrand{
     protected function CheckDublicates($db, $brand, $pointer)
     {
         if ($pointer === 'create') {
-            $getBrandQuery = $db->prepare("SELECT * from brands WHERE Title = ?");
+            $getBrandQuery = $db->prepare("SELECT * from vbrands WHERE Title = ?");
             $getBrandQuery->execute(array($brand->title));
             $currentBrand = $getBrandQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentBrand) == 0) {                
@@ -56,7 +59,7 @@ class Brand implements IBrand{
             }            
         }
         elseif ($pointer === 'update') {
-            $getBrandQuery = $db->prepare("SELECT * from brands WHERE Title = ?");
+            $getBrandQuery = $db->prepare("SELECT * from vbrands WHERE Title = ?");
             $getBrandQuery->execute(array($brand->title));
             $currentBrand = $getBrandQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentBrand) == 0) {
@@ -68,18 +71,18 @@ class Brand implements IBrand{
         }
     }
 
-    public function SetData($inputData, $brand)
+    public function SetData($brand)
     {
-        $brand->id = uniqid();
-        $brand->title = $inputData;
-        return $brand;
+        $this->id = uniqid();
+        $this->title = $brand;
+        return $this;
     }
 
     public function GetBrand($id)
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $getBrandQuery = $db->prepare("SELECT * FROM brands WHERE id = ?");
+        $getBrandQuery = $db->prepare("SELECT * FROM vbrands WHERE id = ?");
         $getBrandQuery->execute(array($id));
         $selectedBrand = $getBrandQuery->fetchAll(PDO::FETCH_OBJ);
         if(count($selectedBrand) != 0) {
@@ -93,7 +96,7 @@ class Brand implements IBrand{
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $selectBrandQuery = $db->prepare("SELECT * FROM brands");
+        $selectBrandQuery = $db->prepare("SELECT * FROM vbrands");
         $selectBrandQuery->execute();
         $brands = $selectBrandQuery->fetchAll(PDO::FETCH_OBJ);
         if(count($brands) != 0) {
@@ -103,11 +106,10 @@ class Brand implements IBrand{
         }
     }
 
-    public function CheckData($inputData)
+    public function CheckData($title)
     {
         try {
-            $title = $inputData;
-            $titleLength = strlen($title);
+            $titleLength = mb_strlen($title);
             if ($titleLength != 0) {
                 if ($titleLength >= 3 && $titleLength <= 25) {
                     if(htmlspecialchars($title) == $title) {
@@ -154,9 +156,9 @@ interface IBrand {
   
     function UpdateBrand($brand);
 
-    function SetData($inputData, $brand);
+    function SetData($brand);
 
-    function CheckData($inputData);
+    function CheckData($title);
 
     function ShowBrands();
 

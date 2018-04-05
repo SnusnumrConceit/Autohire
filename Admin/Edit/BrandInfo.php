@@ -38,14 +38,12 @@ BRAND;
             } else{
                 echo('Данная запись не была найдена');
             }
-        } /*else {
-            echo('Вы совершили некорректное действие'); //надо бы возвращать 502 ошибку            
-        }*/
+        } 
     } if($_SERVER['REQUEST_METHOD'] == 'POST') {        
         if ($_POST['edit_brand'] ?? '') {
              function CheckData($brand) {
                 try {                    
-                    $brandLength = strlen($brand->title);
+                    $brandLength = mb_strlen($brand->title);
                     if (($brand->id ?? '') && ($brand->title ?? '')) {
                         if ($brandLength >= 3 && $brandLength <= 25) {
                             if (trim($brand->title) === $brand->title && htmlentities($brand->title) === $brand->title ) {

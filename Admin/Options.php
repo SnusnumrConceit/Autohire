@@ -8,7 +8,7 @@ session_start();
             $inputData = $_POST['option'];
             $option = new Option();  
             if($option->CheckData($inputData)) {
-                $option = $option->SetData($inputData, $option);
+                $option = $option->SetData($inputData);
                 $option->CreateOption($option);
             }            
         } elseif ($_POST['id'] ?? '') {

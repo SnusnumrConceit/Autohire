@@ -8,7 +8,7 @@ session_start();
             require_once '../Classes/User.php';
             $user = new User();
             if($user->CheckData($inputData)) {
-                $user = $user->SetData($inputData, $user);
+                $user = $user->SetData($inputData);
                 $user->CreateUser($user);
             }            
         } 

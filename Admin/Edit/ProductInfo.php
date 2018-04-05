@@ -136,17 +136,15 @@ PRODUCT;
         }
     } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($_POST['product'] ?? '') {
-            $inputData = json_decode($_POST['product']);
-            $id = $inputData->id;
+            $inputData = json_decode($_POST['product']);            
             require_once '../../Classes/Product.php';
             $product = new Product();
             //var_dump($inputData);
             if ($_FILES['photo'] ?? '') {
                 $photo = $_FILES['photo'];
                 if ($product->CheckData($inputData, $photo)) {
-                    $product = $product->SetData($inputData, $product, $photo);
-                    $product->id = $id;
-                    $product->UpdateProduct($product);                    
+                    $inputData->photo = base64_encode(file_get_contents($photo['tmp_name']));
+                    $product->UpdateProduct($inputData);                    
                 }
             } else {
                 function CheckDataWithoutPhoto($product)

@@ -13,7 +13,7 @@ public function CreateBody($carBody)
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $carBody, 'create')) {
-            $createBodyQuery = $db->prepare("INSERT INTO carbodies VALUES (?, ?, ?, ?, ?)");
+            $createBodyQuery = $db->prepare("CALL spCreateBody (?, ?, ?, ?, ?)");
             $createBodyQuery->execute(array($carBody->id, $carBody->type, $carBody->oil, $carBody->transmission, $carBody->control));
         } 
     }
@@ -22,7 +22,7 @@ public function CreateBody($carBody)
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $deleteBodyQuery = $db->prepare("DELETE FROM carbodies WHERE id = ?");
+        $deleteBodyQuery = $db->prepare("CALL spDeleteBody (?)");
         $deleteBodyQuery->execute(array($id));        
     }
 
@@ -30,7 +30,7 @@ public function CreateBody($carBody)
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $findBodyQuery = $db->prepare("SELECT * FROM carbodies WHERE Type = ?");
+        $findBodyQuery = $db->prepare("SELECT * FROM vbodies WHERE Type = ?");
         $findBodyQuery->execute(array($body));        
         $currentBody = $findBodyQuery->fetchAll(PDO::FETCH_OBJ);        
         if (count($currentBody) != 0) {
@@ -44,7 +44,7 @@ public function CreateBody($carBody)
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $getBodyQuery = $db->prepare('SELECT * FROM carbodies WHERE id = ?');
+        $getBodyQuery = $db->prepare('SELECT * FROM vbodies WHERE id = ?');
         $getBodyQuery->execute(array($id));
         $selectedBodyQuery = $getBodyQuery->fetchAll(PDO::FETCH_OBJ);
         if (count($selectedBodyQuery) == 1)   {
@@ -60,19 +60,19 @@ public function CreateBody($carBody)
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $carBody, 'update')) {
-            $updateBodyQuery = $db->prepare("UPDATE carbodies SET Type = ?, Oil = ?, Transmission = ?, Control = ? WHERE id = ?");
+            $updateBodyQuery = $db->prepare("CALL spUpdateBody(?, ?, ?, ?, ?)");
             $updateBodyQuery->execute(array($carBody->type, $carBody->oil, $carBody->transmission, $carBody->control, $carBody->id));
         }
     }
 
-    public function SetData($inputData, $carBody)
+    public function SetData($carBody)
     {
-        $carBody->id = uniqid();
-        $carBody->type = $inputData->type;
-        $carBody->oil = $inputData->oil;
-        $carBody->transmission = $inputData->transmission;
-        $carBody->control = $inputData->control;
-        return $carBody;
+        $this->id = uniqid();
+        $this->type = $carBody->type;
+        $this->oil = $carBody->oil;
+        $this->transmission = $carBody->transmission;
+        $this->control = $carBody->control;
+        return $this;
     }
 
     public function CheckData($body)
@@ -138,7 +138,7 @@ public function CreateBody($carBody)
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $selectBodiesQuery = $db->prepare("SELECT * FROM carbodies");
+        $selectBodiesQuery = $db->prepare("SELECT * FROM vbodies");
         $selectBodiesQuery->execute();
         $bodies = $selectBodiesQuery->fetchAll(PDO::FETCH_OBJ);
         $bodiesLength = count($bodies);
@@ -152,7 +152,7 @@ public function CreateBody($carBody)
      protected function CheckDublicates($db, $carBody, $pointer)
     {
         if ($pointer === 'create') {
-            $getBodyQuery = $db->prepare("SELECT * from carbodies WHERE Type = ? AND Oil = ? AND Transmission = ? AND Control = ?");
+            $getBodyQuery = $db->prepare("SELECT * from vbodies WHERE Type = ? AND Oil = ? AND Transmission = ? AND Control = ?");
             $getBodyQuery->execute(array($carBody->type, $carBody->oil, $carBody->transmission, $carBody->control));
             $currentModel = $getBodyQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentModel) == 0) {                
@@ -163,7 +163,7 @@ public function CreateBody($carBody)
             }            
         }
         elseif ($pointer === 'update') {
-            $getBodyQuery = $db->prepare("SELECT * from carbodies WHERE Type = ? AND Oil = ? AND Transmission = ? AND Control = ?");
+            $getBodyQuery = $db->prepare("SELECT * from vbodies WHERE Type = ? AND Oil = ? AND Transmission = ? AND Control = ?");
             $getBodyQuery->execute(array($carBody->type, $carBody->oil, $carBody->transmission, $carBody->control));
             $currentModel = $getBodyQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentModel) == 0) {
@@ -185,9 +185,9 @@ interface ICarBody {
   
     function UpdateBody($carBody);
 
-    function SetData($inputData, $carBody);
+    function SetData($body);
 
-    function CheckData($inputData);
+    function CheckData($body);
 
     function ShowBodies();
 

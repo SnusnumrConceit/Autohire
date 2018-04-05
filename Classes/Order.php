@@ -1,11 +1,16 @@
 <?php
 class Order implements IOrder {
+    protected $id;
+    protected $user;
+    protected $product_id;
+    protected $hours;
+
     public function CreateOrder($order)
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $order)) {
-            $createOrderQuery = $db->prepare("INSERT INTO orders VALUES (?, ?, ?, ?)");
+            $createOrderQuery = $db->prepare("CALL spCreateOrder (?, ?, ?, ?)");
             $createOrderQuery->execute(array($order->id, $order->user, $order->product_id, $order->hours));    
         }
     }
@@ -13,7 +18,7 @@ class Order implements IOrder {
     public function GetOrder($id)
     {
         require_once 'DbConnect.php';
-        $selectOrderQuery = $db->prepare("SELECT * FROM orders WHERE id = ?");
+        $selectOrderQuery = $db->prepare("SELECT * FROM vorders WHERE id = ?");
         $selectOrderQuery->execute(array($id));
         $order = $selectOrderQuery->fetchAll(PDO::FETCH_OBJ);
         if (count($selectOrderQuery) == 1) {
@@ -28,18 +33,18 @@ class Order implements IOrder {
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $deleteOrderQuery = $db->prepare("DELETE FROM orders WHERE id = ?");
+        $deleteOrderQuery = $db->prepare("CALL spDeleteOrder(?)");
         $deleteOrderQuery->execute(array($id));
     }
 
         
     protected function CheckDublicates($db, $order)
     {
-        $getOrderQuery = $db->prepare("SELECT * from orders WHERE User_id = ? AND Product_id = ?");
+        $getOrderQuery = $db->prepare("CALL spCheckDublicateOrder(?,?)");
         $getOrderQuery->execute(array($order->user, $order->product_id));
         $currentOrder = $getOrderQuery->fetchAll();
         if (count($currentOrder) == 0) {                
-            $getOrderQuery = $db->prepare("SELECT * from orders WHERE User_id = ?");
+            $getOrderQuery = $db->prepare("CALL spCheckUserOrders (?)");
             $getOrderQuery->execute(array($order->user));
             $currentOrder = $getOrderQuery->fetchAll();
             if(count($currentOrder) >= 1) {
@@ -59,7 +64,7 @@ class Order implements IOrder {
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $findOrderQuery = $db->prepare("SELECT ord.id, u.Login, concat(u.LName, ' ', U.FName, ' ', u.MName) AS User, m.Title AS Model, cb.Type, pr.Price FROM orders AS ord INNER JOIN users AS u ON ord.User_id = u.id INNER JOIN products AS pr ON ord.Product_id = pr.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id WHERE u.LName = ?");
+        $findOrderQuery = $db->prepare("CALL spFindOrder(?)");
         $findOrderQuery->execute(array($order));        
         $currentOrder = $findOrderQuery->fetchAll(PDO::FETCH_OBJ);        
         if (count($currentOrder) != 0) {
@@ -73,7 +78,7 @@ class Order implements IOrder {
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $selectOrdersQuery = $db->prepare("SELECT ord.id, u.Login, concat(u.LName, ' ', U.FName, ' ', u.MName) AS User, m.Title AS Model, cb.Type, pr.Price, ord.Hours FROM orders AS ord INNER JOIN users AS u ON ord.User_id = u.id INNER JOIN products AS pr ON ord.Product_id = pr.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id");
+        $selectOrdersQuery = $db->prepare("SELECT * FROM vorders");
         $selectOrdersQuery->execute();
         $orders = $selectOrdersQuery->fetchAll(PDO::FETCH_OBJ);
         $ordersLength = count($orders);
@@ -85,13 +90,13 @@ class Order implements IOrder {
         
     }
 
-    public function SetData($inputData, $order)
+    public function SetData($order)
     {
-        $order->id = uniqid();
-        $order->user = $inputData->user;
-        $order->product_id = $inputData->product_id;  
-        $order->hours = $inputData->hours;     
-        return $order;    
+        $this->id = uniqid();
+        $this->user = $order->user;
+        $this->product_id = $order->product_id;  
+        $this->hours = $order->hours;     
+        return $this;    
     }
 
     public function CheckData($order)
@@ -147,9 +152,9 @@ interface IOrder {
 
     function ShowOrders();
 
-    function SetData($inputData, $order);
+    function SetData($order);
 
-    function CheckData($inputData);
+    function CheckData($order);
 
     function FindOrder($order);
 }

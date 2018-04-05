@@ -1,11 +1,19 @@
 <?php
 class Product implements IProduct {
+    protected $id;
+    protected $brand;
+    protected $model;
+    protected $price;
+    protected $photo;
+    protected $body;
+    protected $options;
+
     public function CreateProduct($product)
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $product, 'create')) {
-            $createProductQuery = $db->prepare("INSERT INTO products VALUES (?, ?, ?, ?, ?, ?)");
+            $createProductQuery = $db->prepare("CALL spCreateProduct (?, ?, ?, ?, ?, ?)");
             $createProductQuery->execute(array($product->id, $product->brand, $product->model, $product->price, $product->photo, $product->body));
             $this->UpdateOptions($db, $product);
         }
@@ -15,11 +23,11 @@ class Product implements IProduct {
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $selectProductQuery = $db->prepare("SELECT pr.id, b.Title AS Brand, m.Title AS Model, pr.Price, pr.Photo, cb.Type, cb.Oil, cb.Transmission, cb.Control  FROM products AS pr INNER JOIN brands AS b ON pr.Brand_id = b.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id WHERE pr.id = ?");
+        $selectProductQuery = $db->prepare("SELECT * FROM vproducts WHERE id = ?");
         $selectProductQuery->execute(array($id));
         $product = $selectProductQuery->fetchAll(PDO::FETCH_OBJ);
         if ($product) {
-            $selectOptionsQuery = $db->prepare("SELECT opt.Title FROM characteristics AS chr INNER JOIN options AS opt ON opt.id = chr.Option_id WHERE chr.Product_id = ?");
+            $selectOptionsQuery = $db->prepare("CALL spGetProductOptions(?)");
             $productsLength = count($product);
             if ($productsLength == 1) {
                 for ($i=0; $i < $productsLength; $i++) { 
@@ -40,7 +48,7 @@ class Product implements IProduct {
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $deleteProductQuery = $db->prepare("DELETE FROM products WHERE id = ?");
+        $deleteProductQuery = $db->prepare("CALL spDeleteProduct(?)");
         $deleteProductQuery->execute(array($id));
     }
 
@@ -51,11 +59,11 @@ class Product implements IProduct {
         //дописать логику для варианта без фотки
         if ($this->CheckDublicates($db, $product, 'update')) {
             if ($product->photo ?? '') {
-                $updateProductQuery = $db->prepare('UPDATE products SET Brand_id = ?, Model_id = ?, Price = ?, Photo = ?, CarBody_id = ? WHERE id = ?');
+                $updateProductQuery = $db->prepare('CALL spUpdateProduct (?, ?, ?, ?, ?, ?)');
                 $updateProductQuery->execute(array($product->brand, $product->model, $product->price, $product->photo, $product->body, $product->id));
                 $this->UpdateOptions($db, $product);
             } else {
-                $updateProductQuery = $db->prepare('UPDATE products SET Brand_id = ?, Model_id = ?, Price = ?, CarBody_id = ? WHERE id = ?');
+                $updateProductQuery = $db->prepare('CALL spUpdateProductMinPhoto(?, ?, ?, ?, ?)');
                 $updateProductQuery->execute(array($product->brand, $product->model, $product->price, $product->body, $product->id));
                 $this->UpdateOptions($db, $product);
             }
@@ -64,10 +72,10 @@ class Product implements IProduct {
     }
     protected function UpdateOptions($db, $product){
         if ($product->options ?? '') {
-                $clearCharacteristics = $db->prepare("DELETE FROM characteristics WHERE Product_id = ?");
+                $clearCharacteristics = $db->prepare("CALL spDeleteCharacteristic(?)");
                 $clearCharacteristics->execute(array($product->id));
                 $options = count($product->options);
-                $createCharacteritics = $db->prepare("INSERT INTO characteristics VALUES (?,?)");
+                $createCharacteritics = $db->prepare("CALL spCreateCharacteristic(?,?)");
                 for ($i=0; $i < $options; $i++) { 
                     $createCharacteritics->execute(array($product->id, $product->options[$i]));
                 }
@@ -76,7 +84,7 @@ class Product implements IProduct {
     protected function CheckDublicates($db, $product, $pointer)
     {
         if ($pointer === 'create') {
-            $getProductQuery = $db->prepare("SELECT * from products WHERE Model_id = ? AND CarBody_id = ?");
+            $getProductQuery = $db->prepare("CALL spCheckDublicateProduct(?,?)");
             $getProductQuery->execute(array($product->model, $product->body));
             $currentProduct = $getProductQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentProduct) == 0) {                
@@ -87,7 +95,7 @@ class Product implements IProduct {
             }            
         }
         elseif ($pointer === 'update') {
-            $getProductQuery = $db->prepare("SELECT * from products WHERE Model_id = ? AND CarBody_id = ?");
+            $getProductQuery = $db->prepare("CALL spCheckDublicateProduct(?,?)");
             $getProductQuery->execute(array($product->model, $product->body));
             $currentProduct = $getProductQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentProduct) == 0 || count($currentProduct) == 1) {
@@ -103,7 +111,7 @@ class Product implements IProduct {
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $findProductQuery = $db->prepare('SELECT pr.id, b.Title AS Brand, m.Title AS Model, pr.Price, pr.Photo, cb.Type, cb.Oil, cb.Transmission, cb.Control  FROM products AS pr INNER JOIN brands AS b ON pr.Brand_id = b.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id WHERE m.Title = ?');
+        $findProductQuery = $db->prepare('SELECT * FROM vproducts WHERE Model = ?');
         $findProductQuery->execute(array($product));        
         $currentProduct = $findProductQuery->fetchAll(PDO::FETCH_OBJ);        
         if (count($currentProduct) != 0) {
@@ -117,7 +125,7 @@ class Product implements IProduct {
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $selectProductsQuery = $db->prepare("SELECT pr.id, b.Title AS Brand, m.Title AS Model, pr.Price, pr.Photo, cb.Type, cb.Oil, cb.Transmission, cb.Control  FROM products AS pr INNER JOIN brands AS b ON pr.Brand_id = b.id INNER JOIN models AS m ON pr.Model_id = m.id INNER JOIN carbodies AS cb ON pr.CarBody_id = cb.id");
+        $selectProductsQuery = $db->prepare("SELECT * FROM vproducts");
         $selectProductsQuery->execute();
         $products = $selectProductsQuery->fetchAll(PDO::FETCH_OBJ);
         $selectOptionsQuery = $db->prepare("SELECT opt.Title FROM characteristics AS chr INNER JOIN options AS opt ON opt.id = chr.Option_id WHERE chr.Product_id = ?");
@@ -137,16 +145,16 @@ class Product implements IProduct {
         
     }
 
-    public function SetData($inputData, $product, $photo)
+    public function SetData($product, $photo)
     {
-        $product->id = uniqid();
-        $product->brand = $inputData->brand;
-        $product->model = $inputData->model;
-        $product->price = $inputData->price;
-        $product->photo = base64_encode(file_get_contents($photo['tmp_name']));
-        $product->body = $inputData->body;
-        $product->options = $inputData->options;
-        return $product;    
+        $this->id = uniqid();
+        $this->brand = $product->brand;
+        $this->model = $product->model;
+        $this->price = $product->price;
+        $this->photo = base64_encode(file_get_contents($photo['tmp_name']));
+        $this->body = $product->body;
+        $this->options = $product->options;
+        return $this;    
     }
 
     public function CheckData($product, $photo)
@@ -257,7 +265,7 @@ interface IProduct {
 
     function ShowProducts();
 
-    function SetData($inputData, $product, $photo);
+    function SetData($product, $photo);
 
     function CheckData($inputData, $photo);
 

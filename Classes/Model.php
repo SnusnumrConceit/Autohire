@@ -1,15 +1,14 @@
 <?php
-//require_once '../Interfaces/IModel.php';
 class Model implements IModel {
 
-    private $id;
-    private $title;
+    protected $id;
+    protected $title;
 
     public function ShowModels()
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $selectModelsQuery = $db->prepare('SELECT * FROM models');
+        $selectModelsQuery = $db->prepare('SELECT * FROM vmodels');
         $selectModelsQuery->execute();
         $models = $selectModelsQuery->fetchAll(PDO::FETCH_OBJ);
         if ($models != 0) {
@@ -27,7 +26,7 @@ class Model implements IModel {
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $model, 'create')) {
-            $insertModelQuery = $db->prepare("INSERT INTO models VALUES (?, ?)");
+            $insertModelQuery = $db->prepare("CALL spCreateModel(?, ?)");
             $insertModelQuery->execute(array($model->id, $model->title));    
         }       
         
@@ -37,7 +36,7 @@ class Model implements IModel {
         require_once 'DbConnect.php';
         $db = DbConnect();
         if($this->CheckDublicates($db, $model, 'update')) {
-            $updateModelQuery = $db->prepare("UPDATE models SET Title = ? WHERE id = ?");
+            $updateModelQuery = $db->prepare("CALL spUpdateModel(?,?)");
             $updateModelQuery->execute(array($model->title, $model->id));
         }
     }
@@ -45,7 +44,7 @@ class Model implements IModel {
     protected function CheckDublicates($db, $model, $pointer)
     {
         if ($pointer === 'create') {
-            $getModelQuery = $db->prepare("SELECT * from models WHERE Title = ?");
+            $getModelQuery = $db->prepare("SELECT * from vmodels WHERE Title = ?");
             $getModelQuery->execute(array($model->title));
             $currentModel = $getModelQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentModel) == 0) {                
@@ -56,7 +55,7 @@ class Model implements IModel {
             }            
         }
         elseif ($pointer === 'update') {
-            $getModelQuery = $db->prepare("SELECT * from models WHERE Title = ?");
+            $getModelQuery = $db->prepare("SELECT * from vmodels WHERE Title = ?");
             $getModelQuery->execute(array($model->title));
             $currentModel = $getModelQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentModel) == 0) {
@@ -70,7 +69,7 @@ class Model implements IModel {
     public function DeleteModel($id) {
         require_once 'DbConnect.php';
         $db = DbConnect();                
-        $deleteModelQuery = $db->prepare("DELETE FROM models WHERE id = ?");
+        $deleteModelQuery = $db->prepare("CALL spDeleteModel(?)");
         $deleteModelQuery->execute(array($id));
     }
 
@@ -78,7 +77,7 @@ class Model implements IModel {
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $findModelQuery = $db->prepare('SELECT * FROM models WHERE Title = ?');
+        $findModelQuery = $db->prepare('SELECT * FROM vmodels WHERE Title = ?');
         $findModelQuery->execute(array($model));        
         $currentProduct = $findModelQuery->fetchAll(PDO::FETCH_OBJ);        
         if (count($currentProduct) != 0) {
@@ -92,7 +91,7 @@ class Model implements IModel {
     {        
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $getModelQuery = $db->prepare('SELECT * FROM models WHERE id = ?');
+        $getModelQuery = $db->prepare('SELECT * FROM vmodels WHERE id = ?');
         $getModelQuery->execute(array($id));
         $model = $getModelQuery->fetchAll(PDO::FETCH_OBJ);
         if (count($model) == 1) {
@@ -107,7 +106,7 @@ class Model implements IModel {
     {
         try {
             $title = $inputData;
-            $titleLength = strlen($title);
+            $titleLength = mb_strlen($title);
             if ($titleLength != 0) {
                 if ($titleLength > 3 && $titleLength <= 25) {
                     if(htmlspecialchars($title) == $title) {
@@ -145,36 +144,30 @@ class Model implements IModel {
 
     }
     
-    public function SetData($inputData, $model)
+    public function SetData($title)
     {
-        $model->id = uniqid();
-        $model->title = $inputData;
-        return $model;
+        $this->id = uniqid();
+        $this->title = $title;
+        return $this;
     }
 }
 
 
 interface IModel { 
-    #вывод всех моделей
+    
     function ShowModels();
 
-    #получение конкретной модели
     function GetModel($id);
     
-    #создание модели
     function CreateModel($title);    
 
-    #обновление модели
     function UpdateModel($id);    
 
-    #удаление модели
     function DeleteModel($id);
 
-    #проверка корректности приходящих данных
     function CheckData($inputData);
     
-    #присвоение корректных пришедших с клиента данных экземпляру класса для удобства работы
-    function SetData($inputData, $model);
+    function SetData($title);
     
     function FindModel($model);
 }

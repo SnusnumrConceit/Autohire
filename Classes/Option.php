@@ -1,11 +1,13 @@
 <?php
 class Option implements IOption{
+    protected $id;
+    protected $title;
     public function CreateOption($option)
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $option, 'create')) {
-            $insertOptionQuery = $db->prepare("INSERT INTO options VALUES (?,?)");
+            $insertOptionQuery = $db->prepare("CALL spCreateOption(?,?)");
             $insertOptionQuery->execute(array($option->id, $option->title));    
         }        
     }
@@ -14,7 +16,7 @@ class Option implements IOption{
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $deleteOptionQuery = $db->prepare("DELETE FROM options WHERE id =?");
+        $deleteOptionQuery = $db->prepare("CALL spDeleteOption(?)");
         $deleteOptionQuery->execute(array($id));
     }
 
@@ -23,7 +25,7 @@ class Option implements IOption{
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $option, 'update')) {
-            $updateOptionQuery = $db->prepare("UPDATE options SET Title = ? WHERE id = ?");
+            $updateOptionQuery = $db->prepare("CALL spUpdateOption(?,?)");
             $updateOptionQuery->execute(array($option->title, $option->id));
         }     
         
@@ -33,7 +35,7 @@ class Option implements IOption{
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $findOptionQuery = $db->prepare('SELECT * FROM options WHERE Title = ?');
+        $findOptionQuery = $db->prepare('SELECT * FROM voptions WHERE Title = ?');
         $findOptionQuery->execute(array($option));        
         $currentProduct = $findOptionQuery->fetchAll(PDO::FETCH_OBJ);        
         if (count($currentProduct) != 0) {
@@ -43,18 +45,18 @@ class Option implements IOption{
         }        
     }
 
-    public function SetData($inputData, $option)
+    public function SetData($option)
     {
-        $option->id = uniqid();
-        $option->title = $inputData;
-        return $option;
+        $this->id = uniqid();
+        $this->title = $option;
+        return $this;
     }
 
     public function GetOption($id)
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $getOptionQuery = $db->prepare("SELECT * FROM options WHERE id = ?");
+        $getOptionQuery = $db->prepare("SELECT * FROM voptions WHERE id = ?");
         $getOptionQuery->execute(array($id));
         $selectedOption = $getOptionQuery->fetchAll(PDO::FETCH_OBJ);
         if(count($selectedOption) != 0) {
@@ -68,7 +70,7 @@ class Option implements IOption{
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $selectOptionQuery = $db->prepare("SELECT * FROM options");
+        $selectOptionQuery = $db->prepare("SELECT * FROM voptions");
         $selectOptionQuery->execute();
         $options = $selectOptionQuery->fetchAll(PDO::FETCH_OBJ);
         if(count($options) != 0) {
@@ -80,7 +82,7 @@ class Option implements IOption{
     protected function CheckDublicates($db, $option, $pointer)
     {
         if ($pointer === 'create') {
-            $getOptionQuery = $db->prepare("SELECT * from options WHERE Title = ?");
+            $getOptionQuery = $db->prepare("SELECT * from voptions WHERE Title = ?");
             $getOptionQuery->execute(array($option->title));            
             $currentOption = $getOptionQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentOption) == 0) {                     
@@ -91,7 +93,7 @@ class Option implements IOption{
             }            
         }
         elseif ($pointer === 'update') {
-            $getOptionQuery = $db->prepare("SELECT * from options WHERE Title = ?");
+            $getOptionQuery = $db->prepare("SELECT * from voptions WHERE Title = ?");
             $getOptionQuery->execute(array($option->title));
             $currentOption = $getOptionQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentOption) == 0) {
@@ -107,7 +109,7 @@ class Option implements IOption{
     {
         try {
             $title = $inputData;
-            $titleLength = strlen($title);
+            $titleLength = mb_strlen($title);
             if ($titleLength != 0) {
                 if ($titleLength > 2 && $titleLength <= 25) {
                     if(htmlspecialchars($title) == $title) {
@@ -154,9 +156,9 @@ interface IOption {
   
     function UpdateOption($option);
 
-    function SetData($inputData, $option);
+    function SetData($option);
 
-    function CheckData($inputData);
+    function CheckData($option);
 
     function ShowOptions();
 

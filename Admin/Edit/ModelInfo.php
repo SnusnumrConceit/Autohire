@@ -38,14 +38,12 @@ MODEL;
             } else{
                 echo('Данная запись не была найдена');
             }
-        } /*else {
-            echo('Вы совершили некорректное действие'); //надо бы возвращать 502 ошибку            
-        }*/
+        } 
     } if($_SERVER['REQUEST_METHOD'] == 'POST') {        
         if ($_POST['edit_model'] ?? '') {
              function CheckData($model) {
                 try {                    
-                    $modelLength = strlen($model->title);
+                    $modelLength = mb_strlen($model->title);
                     if (($model->id ?? '') && ($model->title ?? '')) {
                         if ($modelLength >= 3 && $modelLength <= 25) {
                             if (trim($model->title) === $model->title && htmlentities($model->title) === $model->title ) {

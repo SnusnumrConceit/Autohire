@@ -19,11 +19,14 @@ $('#btnSubmitEdit').click(function () {
     };
     function CheckData(data) {  
         try {
-            let titleRegExp = /[a-z]/;
             if (data !== '' && data !== null && data !== undefined) {
                 if (data.length >= 3 && data.length <= 25) {
-                    if (titleRegExp.exec(data)) {
-                        return true;
+                    if (/[a-zA-Zа-яА-ЯёЁ]+/.exec(data) !== null) {
+                        if (/[a-zA-Zа-яА-ЯёЁ]+/.exec(data)[0] == data) {
+                            return true;
+                        } else {
+                            throw new Error('Uncorrect Data Error');
+                        }
                     } else {
                         throw new Error('Uncorrect Data Error');
                     }    

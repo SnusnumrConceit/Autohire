@@ -38,14 +38,12 @@ OPTION;
             } else{
                 echo('Данная запись не была найдена');
             }
-        } /*else {
-            echo('Вы совершили некорректное действие'); //надо бы возвращать 502 ошибку            
-        }*/
+        } 
     } if($_SERVER['REQUEST_METHOD'] == 'POST') {        
         if ($_POST['edit_option'] ?? '') {
             function CheckData($option) {
                 try {                    
-                    $optionLength = strlen($option->title);
+                    $optionLength = mb_strlen($option->title);
                     if (($option->id ?? '') && ($option->title ?? '')) {
                         if ($optionLength >= 3 && $optionLength <= 25) {
                             if (trim($option->title) === $option->title && htmlentities($option->title) === $option->title ) {

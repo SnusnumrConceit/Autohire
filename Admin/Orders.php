@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             require_once '../Classes/Order.php';
             $order = new Order();
             if ($order->CheckData($inputData)) {
-                $order = $order->SetData($inputData, $order);
+                $order = $order->SetData($inputData);
                 $order->CreateOrder($order);    
             }            
         } 

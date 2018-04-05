@@ -59,9 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if (strlen($user->login) != 0 && strlen($user->lastName) != 0 && 
                 strlen($user->firstName) != 0 && strlen($user->middleName) !=0) {                
                     $loginLength = strlen($user->login);
-                    $firstNameLength = strlen($user->firstName);
-                    $middleNameLength = strlen($user->middleName);
-                    $lastNameLength = strlen($user->lastName);
+                    $firstNameLength = mb_strlen($user->firstName);
+                    $middleNameLength = mb_strlen($user->middleName);
+                    $lastNameLength = mb_strlen($user->lastName);
                     #проверка на длину поля
                     if ($loginLength >= 6 && $loginLength <= 24 &&
                         $firstNameLength >= 4 && $firstNameLength <= 15 &&

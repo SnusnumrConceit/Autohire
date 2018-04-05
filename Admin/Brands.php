@@ -8,7 +8,7 @@ session_start();
             $title = $_POST['brand'];
             $brand = new Brand();
             if ($brand->CheckData($title)) {
-                $brand = $brand->SetData($title, $brand);
+                $brand = $brand->SetData($title);
                 $brand->CreateBrand($brand);
             }                             
         } elseif ($_POST['id'] ?? '') {

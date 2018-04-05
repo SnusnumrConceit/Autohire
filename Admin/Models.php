@@ -9,7 +9,7 @@ session_start();
                 $title = $_POST['model'];
                 $model = new Model();    
                 if ($model->CheckData($title)) {
-                    $model = $model->SetData($title, $model);
+                    $model = $model->SetData($title);
                     $model->CreateModel($model);   
                 }
             }

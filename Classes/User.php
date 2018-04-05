@@ -1,20 +1,19 @@
 <?php
-//класс, отвечающий за пользователей
 class User implements IUser{
-    private $id;
-    private $login;
-    private $password;
-    private $lastName;
-    private $firstName;
-    private $middleName;
-    private $role;
+    protected $id;
+    protected $login;
+    protected $password;
+    protected $lastName;
+    protected $firstName;
+    protected $middleName;
+    protected $role;
 
     public function CreateUser($user)
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $user, 'create')) {
-            $createUserQuery = $db->prepare("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $createUserQuery = $db->prepare("CALL spCreateUser (?, ?, ?, ?, ?, ?, ?)");
             $createUserQuery->execute(array($user->id, $user->login, $user->password, $user->lastName, $user->firstName, $user->middleName, $user->phoneNumber));
         }
         if (substr($_SERVER['HTTP_REFERER'], -9, 9) === 'index.php') {
@@ -26,20 +25,15 @@ class User implements IUser{
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $deleteUserQuery = $db->prepare("DELETE FROM users WHERE id = ?");
+        $deleteUserQuery = $db->prepare("CALL spDeleteUser(?)");
         $deleteUserQuery->execute(array($id));        
     }
 
     public function GetUser($id)
     {
-        /*if (substr($_SERVER['HTTP_REFERER'], -9, 9) === 'index.php') {
-            
-        } else {//if (substr($_SERVER['HTTP_REFERER'], -12, 12) === 'userinfo.php') {
-            require_once 'DbConnect.php';
-        }*/
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $getUserQuery = $db->prepare('SELECT * FROM users WHERE id = ?');
+        $getUserQuery = $db->prepare('SELECT * FROM vusers WHERE id = ?');
         $getUserQuery->execute(array($id));
         $selectedUserQuery = $getUserQuery->fetchAll(PDO::FETCH_OBJ);
         if (count($selectedUserQuery) == 1)   {
@@ -54,7 +48,7 @@ class User implements IUser{
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $findUserQuery = $db->prepare('SELECT * FROM users WHERE LName = ?');
+        $findUserQuery = $db->prepare('SELECT * FROM vusers WHERE LName = ?');
         $findUserQuery->execute(array($lastName));
         $currentUser = $findUserQuery->fetchAll(PDO::FETCH_OBJ);
         if (count($currentUser) != 0) {
@@ -69,22 +63,21 @@ class User implements IUser{
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($db, $user, 'update')) {
-            $updateUserQuery = $db->prepare("UPDATE users SET Login = ?, LName = ?, FName = ?, MName = ? WHERE id = ?");
+            $updateUserQuery = $db->prepare("CALL spUpdateUser(?, ?, ?, ?, ?)");
             $updateUserQuery->execute(array($user->login, $user->lastName, $user->firstName, $user->middleName, $user->id));            
         }
     }
 
-    public function SetData($inputData, $user)
+    public function SetData($user)
     {
-        $user->id = uniqid();
-        $user->login = $inputData->login;
-        $user->password = password_hash($inputData->pass, PASSWORD_DEFAULT);
-        ;;
-        $user->lastName = $inputData->lastName;
-        $user->firstName = $inputData->firstName;
-        $user->middleName = $inputData->middleName;
-        $user->phoneNumber = $inputData->phoneNumber;
-        return $user;
+        $this->id = uniqid();
+        $this->login = $user->login;
+        $this->password = password_hash($user->pass, PASSWORD_DEFAULT);
+        $this->lastName = $user->lastName;
+        $this->firstName = $user->firstName;
+        $this->middleName = $user->middleName;
+        $this->phoneNumber = $user->phoneNumber;
+        return $this;
     }
 
     public function CheckData($user)
@@ -181,19 +174,19 @@ class User implements IUser{
             }
             if ($error->getMessage() === 'Length Data Error') {
                 if (strlen($user->login) < 6 || strlen($user->login) > 24) {
-                    echo("Логин должен быть от 6 до 24 символов \n");                    
+                    echo("Логин должен быть от 6 до 24 символов! \n");                    
                 } 
                 if (strlen($user->pass) < 6 || strlen($user->pass) > 24) {
-                    echo("Пароль должен быть от 6 до 24 символов \n");                    
+                    echo("Пароль должен быть от 6 до 24 символов! \n");                    
                 } 
                 if (strlen($user->lastName) < 3 || strlen($user->lastName) > 30) {
-                    echo("Фамилия должна быть от 3 до 30 символов \n");                    
+                    echo("Фамилия должна быть от 3 до 30 символов! \n");                    
                 }
                 if (strlen($user->firstName) < 4 || strlen($user->firstName) > 15 ) {
-                    echo("Имя должно быть от 4 до 15 символов \n");                    
+                    echo("Имя должно быть от 4 до 15 символов! \n");                    
                 }
                 if (strlen($user->middleName) < 6 || strlen($user->middleName) > 24) {
-                    echo("Отчество должно быть от 6 до 24 символов \n");                    
+                    echo("Отчество должно быть от 6 до 24 символов! \n");                    
                 }
                 if ($phoneNumberLength != 15) {
                     echo('Наш сервис работает только с телефоннами номерами РФ!');
@@ -203,62 +196,62 @@ class User implements IUser{
             if ($error->getMessage() === 'Wrong Data Error') {
                 if (htmlspecialchars($user->login) != $user->login && trim($user->login) != $user->login || !($regLogin ?? '')) {
                     if ($regLogin[0] != $user->login) {
-                        echo("Логин должен состоять из латинских букв, цифр, точки и знака подчёркивания \n");
+                        echo("Логин должен состоять из латинских букв, цифр, точки и знака подчёркивания! \n");
                     } else {
-                        echo("Логин должен состоять из латинских букв, цифр, точки и знака подчёркивания \n");
+                        echo("Логин должен состоять из латинских букв, цифр, точки и знака подчёркивания! \n");
                     }                                   
                 }
                 if ($regLogin ?? '') {
                     if ($regLogin[0] != $user->login) {
-                        echo("Логин должен состоять из латинских букв, цифр, точки и знака подчёркивания \n");
+                        echo("Логин должен состоять из латинских букв, цифр, точки и знака подчёркивания! \n");
                     } 
                 }
                 if (htmlspecialchars($user->pass) != $user->pass && trim($user->pass) != $user->pass || !($regPass ?? '')) {
                     if ($regPass[0] != $user->pass) {
-                        echo("Пароль должен состоять из латинских букв, цифр, точки и знака подчёркивания \n");
+                        echo("Пароль должен состоять из латинских букв, цифр, точки и знака подчёркивания! \n");
                     } else {
-                        echo("Пароль должен состоять из латинских букв, цифр, точки и знака подчёркивания \n");
+                        echo("Пароль должен состоять из латинских букв, цифр, точки и знака подчёркивания! \n");
                     }                    
                 }
                 if ($regPass ?? '') {
                     if ($regPass[0] != $user->pass) {
-                        echo("Пароль должен состоять из латинских букв, цифр, точки и знака подчёркивания \n");
+                        echo("Пароль должен состоять из латинских букв, цифр, точки и знака подчёркивания! \n");
                     } 
                 }
                 if (htmlspecialchars($user->lastName) != $user->lastName && trim($user->lastName) != $user->lastName || !($regLastName ?? '')) {
                     if (($regLastName[0] ?? '') && $regLastName[0] == $user->lastName) {
-                        echo("Фамилия должна состоять из латинских или кириллистических букв \n");
+                        echo("Фамилия должна начинаться с заглавной буквы и состоять из латинских или кириллистических букв! \n");
                     } else {
-                        echo("Фамилия должна состоять из латинских или кириллистических букв \n");             
+                        echo("Фамилия должна начинаться с заглавной буквы и состоять из латинских или кириллистических букв! \n");           
                     }
                 }
                 if ($regLastName ?? '') {
                     if ($regLastName[0] != $user->lastName) {
-                        echo("Фамилия должна состоять из латинских букв, цифр, точки и знака подчёркивания \n");
+                        echo("Фамилия должна начинаться с заглавной буквы и состоять из латинских или кириллистических букв! \n");
                     } 
                 }
                 if (htmlspecialchars($user->firstName) != $user->firstName && trim($user->firstName) != $user->firstName || !($regFirstName ?? '')) {
                     if (($regFirstName[0] ?? '') && $regFirstName[0] == $user->firstName) {
-                        echo("Имя должно состоять из латинских или кириллистических букв \n");
+                        echo("Имя должно начинаться с заглавной буквы и состоять из латинских или кириллистических букв \n");
                     } else {
-                        echo("Имя должно состоять из латинских или кириллистических букв \n");
+                        echo("Имя должно начинаться с заглавной буквы и состоять из латинских или кириллистических букв \n");
                     }                    
                 }
                 if ($regFirstName ?? '') {
                     if ($regFirstName[0] != $user->firstName) {
-                        echo("Имя должно состоять из латинских букв, цифр, точки и знака подчёркивания \n");
+                        echo("Имя должно начинаться с заглавной буквы и состоять из латинских или кириллистических букв \n");
                     } 
                 }
                 if (htmlspecialchars($user->middleName) != $user->middleName && trim($user->middleName) != $user->middleName || !($regMiddleName ?? '')) {
                     if (($regMiddleName[0] ?? '') && $regMiddleName[0] == $user->middleName) {
-                        echo("Отчество должно состоять из латинских или кириллистических букв \n");
+                        echo("Отчество должно начинаться с заглавной буквы и состоять из латинских или кириллистических букв \n");
                     } else {
-                        echo("Отчество должно состоять из латинских или кириллистических букв \n");
+                        echo("Отчество должно начинаться с заглавной буквы и состоять из латинских или кириллистических букв \n");
                     }                                        
                 }
                 if ($regMiddleName ?? '') {
                     if ($regMiddleName[0] != $user->middleName) {
-                        echo("Отчество должно состоять из латинских букв, цифр, точки и знака подчёркивания \n");
+                        echo("Отчество должно начинаться с заглавной буквы и состоять из латинских или кириллистических букв \n");
                     } 
                 }
 
@@ -283,7 +276,7 @@ class User implements IUser{
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $selectUsersQuery = $db->prepare("SELECT * FROM users");
+        $selectUsersQuery = $db->prepare("SELECT * FROM vusers");
         $selectUsersQuery->execute();
         $users = $selectUsersQuery->fetchAll(PDO::FETCH_OBJ);
         $usersLength = count($users);
@@ -297,7 +290,7 @@ class User implements IUser{
     protected function CheckDublicates($db, $user, $pointer)
     {
         if ($pointer === 'create') {
-            $getUserQuery = $db->prepare("SELECT * from users WHERE Login = ?");
+            $getUserQuery = $db->prepare("SELECT * from vusers WHERE Login = ?");
             $getUserQuery->execute(array($user->login));
             $currentUser = $getUserQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentUser) == 0) {                
@@ -308,7 +301,7 @@ class User implements IUser{
             }            
         }
         elseif ($pointer === 'update') {
-            $getUserQuery = $db->prepare("SELECT * from users WHERE Login = ?");
+            $getUserQuery = $db->prepare("SELECT * from vusers WHERE Login = ?");
             $getUserQuery->execute(array($user->login));
             $currentUser = $getUserQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentUser) == 0 || count($currentUser) == 1) {
@@ -333,7 +326,7 @@ interface IUser {
   
     function UpdateUser($user);
 
-    function SetData($inputData, $user);
+    function SetData($user);
 
     function CheckData($inputData);
 

@@ -8,7 +8,7 @@ session_start();
             require_once '../Classes/CarBody.php';
             $carBody = new CarBody();
             if ($carBody->CheckData($inputData)) {
-                $carBody = $carBody->SetData($inputData, $carBody);
+                $carBody = $carBody->SetData($inputData);
                 $carBody->CreateBody($carBody);    
             }            
         } 
