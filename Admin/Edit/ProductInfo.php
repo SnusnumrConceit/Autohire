@@ -139,7 +139,6 @@ PRODUCT;
             $inputData = json_decode($_POST['product']);            
             require_once '../../Classes/Product.php';
             $product = new Product();
-            //var_dump($inputData);
             if ($_FILES['photo'] ?? '') {
                 $photo = $_FILES['photo'];
                 if ($product->CheckData($inputData, $photo)) {
@@ -212,7 +211,6 @@ PRODUCT;
         }
     }
                 if (CheckDataWithoutPhoto($inputData)) {
-                    $inputData->id = $id;
                     $inputData->photo = null;
                     $product->UpdateProduct($inputData);
                 }

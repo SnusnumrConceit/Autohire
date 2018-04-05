@@ -71,9 +71,9 @@ class Product implements IProduct {
         
     }
     protected function UpdateOptions($db, $product){
+        $clearCharacteristics = $db->prepare("CALL spDeleteCharacteristic(?)");
+        $clearCharacteristics->execute(array($product->id));
         if ($product->options ?? '') {
-                $clearCharacteristics = $db->prepare("CALL spDeleteCharacteristic(?)");
-                $clearCharacteristics->execute(array($product->id));
                 $options = count($product->options);
                 $createCharacteritics = $db->prepare("CALL spCreateCharacteristic(?,?)");
                 for ($i=0; $i < $options; $i++) { 
