@@ -3,7 +3,7 @@ var btnEdit = $('.btn-warning'),
     btnSubmit = $('#btnSubmit'),
     btnFind = $('#btn-find-user');
 
-    $('.create-user-container').css('display', 'none');
+    $('.create-user-container').css({'display': 'none', 'margin-top': '20px'});
     $('#btn-open-create-user-container').click(function () {  
         $('.create-user-container').slideToggle();
     }) 

@@ -43,7 +43,7 @@ print <<<ORDERS
             </div>
             <div class="find-order-container col">                
                 <form method="GET" class="form-inline">
-                    <input class="form-control col-sm-5" type="text" id="order" placeholder="Введите фамилию клиента">
+                    <input class="form-control col-sm-5" type="text" id="order" placeholder="Введите фамилию клиента" value="{$_GET['order']}">
                     <button id="btn-find-order" class="btn btn-primary col-form-label">Найти</button>
                 </form>
             </div>
@@ -105,6 +105,7 @@ ORDERS;
                                             <th>ФИО</th>
                                             <th>Модель</th>
                                             <th>Кузов</th>
+                                            <th>Время</th>
                                             <th>Цена</th>
                                             <th>Операции</th>
                                         </thead>
@@ -116,6 +117,7 @@ ORDERS;
                                     <td>{$orders[$i]->User}</td>
                                     <td>{$orders[$i]->Model}</td>
                                     <td>{$orders[$i]->Type}</td>
+                                    <td>{$orders[$i]->Hours}</td>
                                     <td>{$orders[$i]->Price}</td>
                                     <td><button class=\"btn btn-danger\">Удалить</button></td>
                                 </tr>";

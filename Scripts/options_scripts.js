@@ -3,7 +3,7 @@ var btnEdit = $('.btn-warning'),
     btnSubmit = $('#btnSubmit'),
     btnFind = $('#btn-find-option');
 
-$('.create-option-container').css('display', 'none');
+$('.create-option-container').css({'display': 'none', 'margin-top': '20px'});
 
 $('#btn-open-create-option-container').click(function () { 
     $('.create-option-container').slideToggle();

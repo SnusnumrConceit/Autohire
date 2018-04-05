@@ -33,47 +33,49 @@ session_start();
         <title>Пользователи</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
     <body>
          <div class="container">
-            <div>
-                <button id="btn-open-create-user-container" class="btn btn-success">Добавить</button>
-                <a class="btn btn-default" href="admin.php">На главную</a>
+            <div class="row">
+                <div class="col-3">
+                    <button id="btn-open-create-user-container" class="btn btn-success">Добавить</button>
+                    <a class="btn btn-default" href="admin.php">На главную</a>
+                </div>
+                <div class="find-user-container col">                
+                    <form method="GET" class="form-inline">
+                        <input class="form-control col-sm-5" type="text" id="user" placeholder="Введите фамилию пользователя">
+                        <button id="btn-find-user" class="btn btn-primary col-form-label">Найти</button>
+                    </form>
+                </div>
             </div>
             <div class="form-group create-user-container">
                 <form method="POST">
-                    <div class="form-group">
-                        <label for="login">Логин</label>
-                        <input type="text" class="form-control" id="login">
+                    <div class="form-group row">
+                        <label for="login" class="col-form-label col-sm-2">Логин</label>
+                        <input type="text" class="form-control col-sm-4" id="login">
                     </div>
-                    <div class="form-group">
-                        <label for="password">Пароль</label>
-                        <input type="password" class="form-control" id="password">
+                    <div class="form-group row">
+                        <label for="password" class="col-form-label col-sm-2">Пароль</label>
+                        <input type="password" class="form-control col-sm-4" id="password">
                     </div>
-                    <div class="form-group">
-                        <label for="phone-number">Номер телефона</label>
-                        <input type="text" class="form-control" id="phone-number">
+                    <div class="form-group row">
+                        <label for="phone-number" class="col-form-label col-sm-2">Номер телефона</label>
+                        <input type="text" class="form-control col-sm-4" id="phone-number">
                     </div>
-                    <div class="form-group">
-                        <label for="last-name">Фамилия</label>
-                        <input type="text" class="form-control" id="last-name">
+                    <div class="form-group row">
+                        <label for="last-name" class="col-form-label col-sm-2">Фамилия</label>
+                        <input type="text" class="form-control col-sm-4" id="last-name">
                     </div>
-                    <div class="form-group">
-                        <label for="first-name">Имя</label>
-                        <input type="text" class="form-control" id="first-name">
+                    <div class="form-group row">
+                        <label for="first-name" class="col-form-label col-sm-2">Имя</label>
+                        <input type="text" class="form-control col-sm-4" id="first-name">
                     </div>
-                    <div class="form-group">
-                        <label for="middle-name">Отчество</label>
-                        <input type="text" class="form-control" id="middle-name">
+                    <div class="form-group row">
+                        <label for="middle-name" class="col-form-label col-sm-2">Отчество</label>
+                        <input type="text" class="form-control col-sm-4" id="middle-name">
                     </div>
                     <button type="button" id="btnSubmit" class="btn btn-success">Отправить</button>    
-                </form>
-            </div>
-            <div class="find-user-container">                
-                <form method="GET">
-                    <input class="form-control" type="text" id="user" value="{$inputData}" placeholder="Введите фамилию пользователя">
-                    <button id="btn-find-user" class="btn btn-primary">Найти</button>
                 </form>
             </div>
             <div>
@@ -135,47 +137,49 @@ print <<<USERS
         <title>Пользователи</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
     <body>
          <div class="container">
-            <div>
-                <button id="btn-open-create-user-container" class="btn btn-success">Добавить</button>
-                <a class="btn btn-default" href="admin.php">На главную</a>
+            <div class="row">
+                <div class="col-3">
+                    <button id="btn-open-create-user-container" class="btn btn-success">Добавить</button>
+                    <a class="btn btn-default" href="admin.php">На главную</a>
+                </div>
+                <div class="find-user-container col">                
+                    <form method="GET" class="form-inline">
+                        <input class="form-control col-sm-5" type="text" id="user" placeholder="Введите фамилию пользователя">
+                        <button id="btn-find-user" class="btn btn-primary col-form-label">Найти</button>
+                    </form>
+                </div>
             </div>
             <div class="form-group create-user-container">
                 <form method="POST">
-                    <div class="form-group">
-                        <label for="login">Логин</label>
-                        <input type="text" class="form-control" id="login">
+                    <div class="form-group row">
+                        <label for="login" class="col-form-label col-sm-2">Логин</label>
+                        <input type="text" class="form-control col-sm-4" id="login">
                     </div>
-                    <div class="form-group">
-                        <label for="password">Пароль</label>
-                        <input type="password" class="form-control" id="password">
+                    <div class="form-group row">
+                        <label for="password" class="col-form-label col-sm-2">Пароль</label>
+                        <input type="password" class="form-control col-sm-4" id="password">
                     </div>
-                    <div class="form-group">
-                        <label for="phone-number">Номер телефона</label>
-                        <input type="text" class="form-control" id="phone-number">
+                    <div class="form-group row">
+                        <label for="phone-number" class="col-form-label col-sm-2">Номер телефона</label>
+                        <input type="text" class="form-control col-sm-4" id="phone-number">
                     </div>
-                    <div class="form-group">
-                        <label for="last-name">Фамилия</label>
-                        <input type="text" class="form-control" id="last-name">
+                    <div class="form-group row">
+                        <label for="last-name" class="col-form-label col-sm-2">Фамилия</label>
+                        <input type="text" class="form-control col-sm-4" id="last-name">
                     </div>
-                    <div class="form-group">
-                        <label for="first-name">Имя</label>
-                        <input type="text" class="form-control" id="first-name">
+                    <div class="form-group row">
+                        <label for="first-name" class="col-form-label col-sm-2">Имя</label>
+                        <input type="text" class="form-control col-sm-4" id="first-name">
                     </div>
-                    <div class="form-group">
-                        <label for="middle-name">Отчество</label>
-                        <input type="text" class="form-control" id="middle-name">
+                    <div class="form-group row">
+                        <label for="middle-name" class="col-form-label col-sm-2">Отчество</label>
+                        <input type="text" class="form-control col-sm-4" id="middle-name">
                     </div>
                     <button type="button" id="btnSubmit" class="btn btn-success">Отправить</button>    
-                </form>
-            </div>
-            <div class="find-user-container">                
-                <form method="GET">
-                    <input class="form-control" type="text" id="user" placeholder="Введите фамилию пользователя">
-                    <button id="btn-find-user" class="btn btn-primary">Найти</button>
                 </form>
             </div>
             <div>

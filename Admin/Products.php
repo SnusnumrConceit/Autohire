@@ -34,82 +34,99 @@ print <<<PRODUCTS
         <title>Автомобильный ряд</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
     <body>
          <div class="container">
-            <div>
-                <button id="btn-open-create-product-container" class="btn btn-success">Добавить</button>
-                <a class="btn btn-default" href="admin.php">На главную</a>
+            <div class="row">
+                <div class="col-3">
+                    <button id="btn-open-create-product-container" class="btn btn-success">Добавить</button>
+                    <a class="btn btn-default" href="admin.php">На главную</a>
+                </div>
+                <div class="find-product-container col">                
+                    <form method="GET" class="form-inline">
+                        <input class="form-control col-sm-5" type="text" id="product" placeholder="Введите модель автомобиля" value="{$inputData}">
+                        <button id="btn-find-product" class="btn btn-primary col-form-label">Найти</button>
+                    </form>
+                </div>
             </div>
             <div class="form-group create-product-container">
                 <form method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="photo">Картинка</label>
-                        <input type="file" class="form-control" id="photo">
+                    <div class="form-group row">
+                        <label for="photo" class="col-label-form col-sm-2">Картинка</label>
+                        <input type="file" class="form-control col-sm-4" id="photo">
                     </div>
-                    <div class="form-group">
-                        <label for="brand">Марка</label>
-                        <select class="form-control" id="brand">
+                    <div class="form-group row">
+                        <label for="brand" class='col-form-label col-sm-2'>Марка</label>
 PRODUCTS;
                     require_once '../Classes/Brand.php';
                     $brand = new Brand();
                     $brands = $brand->ShowBrands();
-                    $brandsLength = count($brands);                    
-                    for ($i=0; $i < $brandsLength; $i++) { 
-                        print "<option value=\"{$brands[$i]->id}\">{$brands[$i]->Title}</option>";
+                    $brandsLength = count($brands);
+                    if ($brands) {
+                        print "<select class='form-control col-sm-4' id=\"brand\">";
+                        for ($i=0; $i < $brandsLength; $i++) { 
+                            print "<option value=\"{$brands[$i]->id}\">{$brands[$i]->Title}</option>";
+                        }
+                        print "</select>";
+                    } else {
+                        echo("<div>Для добавления автомобиля в автомобильный ряд сначала добавьте марку автомобиля в разделе <a href='brands.php'><strong>Марки</strong></a></div>");
                     }
-                    print "</select>
-                    </div>
-                    <div class=\"form-group\">
-                        <label for=\"model\">Модель</label>
-                        <select class=\"form-control\" id=\"model\">";
+                    print "</div>
+                    <div class='form-group row'>
+                        <label for=\"model\" class='col-form-label col-sm-2'>Модель</label>";
                     require_once '../Classes/Model.php';
                     $model = new Model();
                     $models = $model->ShowModels();
                     $modelsLength = count($models);
-                    for ($i=0; $i < $modelsLength; $i++) { 
-                        print "<option value=\"{$models[$i]->id}\">{$models[$i]->Title}</option>";
+                    if ($models) {
+                        print "<select class=\"form-control col-sm-4\" id=\"model\">";
+                        for ($i=0; $i < $modelsLength; $i++) { 
+                            print "<option value=\"{$models[$i]->id}\">{$models[$i]->Title}</option>";
+                        }
+                        print "</select>";
+                    } else {
+                        echo("<div>Для добавления автомобиля в автомобильный ряд сначала добавьте модель автомобиля в разделе <a href='models.php'><strong>Модели</strong></a></div>");
                     }
-                    print "</select>
+                    
+                    print "</div>
+                    <div class=\"form-group row\">
+                        <label for=\"price\" class='col-form-label col-sm-2'>Цена</label>
+                        <input type=\"text\" class=\"form-control col-sm-4\" id=\"price\">
                     </div>
-                    <div class=\"form-group\">
-                        <label for=\"price\">Цена</label>
-                        <input type=\"text\" class=\"form-control\" id=\"price\">
-                    </div>
-                    <div class=\"form-group\">
-                        <label for=\"car-body\">Кузов</label>
-                        <select class=\"form-control\" id=\"car-body\">";
+                    <div class=\"form-group row\">
+                        <label for=\"car-body\" class='col-form-label col-sm-2'>Кузов</label>";
                     require_once '../Classes/CarBody.php';
                     $carBody = new CarBody();
                     $carBodies = $carBody->ShowBodies();
                     $carBodiesLength = count($carBodies);
-                    for ($i=0; $i < $carBodiesLength; $i++) { 
-                        print "<option value=\"{$carBodies[$i]->id}\">{$carBodies[$i]->Type}</option>";
+                    if ($carBodies) {
+                        print "<select class=\"form-control col-sm-4\" id=\"car-body\">";
+                        for ($i=0; $i < $carBodiesLength; $i++) { 
+                            print "<option value=\"{$carBodies[$i]->id}\">{$carBodies[$i]->Type}</option>";
+                        }
+                        print "</select>";
+                    } else {
+                        echo("<div>Для добавления автомобиля в автомобильный ряд сначала добавьте кузов автомобиля в разделе <a href='bodies.php'><strong>Кузовы</strong></a></div>");
                     }
-                    print   "</select>
-                    </div>";
-                     print "<div class=\"form-group\">";
+                    
+                    print "</div>
+                            <div class=\"form-group\">";
                     require_once '../Classes/Option.php';
                     $option = new Option();
                     $options = $option->ShowOptions();
                     $optionsLength = count($options);
                     if ($options) {
                         for ($i=0; $i < $optionsLength; $i++) { 
-                            print "<label>{$options[$i]->Title}</label>
-                                    <input type=\"checkbox\" value=\"{$options[$i]->id}\">";
+                            print "<label class='col-form-label'>{$options[$i]->Title}
+                                    <input type=\"checkbox\" value=\"{$options[$i]->id}\">
+                                    </label>";
                         }
                     } else {
                         echo("<div>Для добавления дополнительных опций в автомобильный ряд сначала добавьте данные опции в разделе <a href='options.php'><strong>Опции</strong></a></div>");
                     }
                     print "</div>
                     <button type=\"button\" id=\"btnSubmit\" class=\"btn btn-success\">Отправить</button>    
-                </form>
-            </div>
-            <div class=\"find-product-container\">                
-                <form method=\"GET\">
-                    <input class=\"form-control\" type=\"text\" id=\"product\" placeholder=\"Введите модель автомобиля\" value=\"{$inputData}\">
-                    <button id=\"btn-find-product\" class=\"btn btn-primary\">Найти</button>
                 </form>
             </div>
             <div>
@@ -182,29 +199,37 @@ print <<<PRODUCTS
         <title>Автомобильный ряд</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
     <body>
          <div class="container">
-            <div>
-                <button id="btn-open-create-product-container" class="btn btn-success">Добавить</button>
-                <a class="btn btn-default" href="admin.php">На главную</a>
+            <div class="row">
+                <div class="col-3">
+                    <button id="btn-open-create-product-container" class="btn btn-success">Добавить</button>
+                    <a class="btn btn-default" href="admin.php">На главную</a>
+                </div>
+                <div class="find-product-container col">                
+                    <form method="GET" class="form-inline">
+                        <input class="form-control col-sm-5" type="text" id="product" placeholder="Введите модель автомобиля">
+                        <button id="btn-find-product" class="btn btn-primary col-form-label">Найти</button>
+                    </form>
+                </div>
             </div>
             <div class="form-group create-product-container">
                 <form method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="photo">Картинка</label>
-                        <input type="file" class="form-control" id="photo">
+                    <div class="form-group row">
+                        <label for="photo" class="col-form-label col-sm-2">Картинка</label>
+                        <input type="file" class="form-control col-sm-4" id="photo">
                     </div>
-                    <div class="form-group">
-                        <label for="brand">Марка</label>
+                    <div class="form-group row">
+                        <label for="brand" class="col-form-label col-sm-2">Марка</label>
 PRODUCTS;
                     require_once '../Classes/Brand.php';
                     $brand = new Brand();
                     $brands = $brand->ShowBrands();
                     $brandsLength = count($brands);
                     if ($brands) {
-                        print "<select class=\"form-control\" id=\"brand\">";
+                        print "<select class='form-control col-sm-4' id=\"brand\">";
                         for ($i=0; $i < $brandsLength; $i++) { 
                             print "<option value=\"{$brands[$i]->id}\">{$brands[$i]->Title}</option>";
                         }
@@ -213,14 +238,14 @@ PRODUCTS;
                         echo("<div>Для добавления автомобиля в автомобильный ряд сначала добавьте марку автомобиля в разделе <a href='brands.php'><strong>Марки</strong></a></div>");
                     }
                     print "</div>
-                    <div class=\"form-group\">
-                        <label for=\"model\">Модель</label>";
+                    <div class='form-group row'>
+                        <label for=\"model\" class='col-form-label col-sm-2'>Модель</label>";
                     require_once '../Classes/Model.php';
                     $model = new Model();
                     $models = $model->ShowModels();
                     $modelsLength = count($models);
                     if ($models) {
-                        print "<select class=\"form-control\" id=\"model\">";
+                        print "<select class=\"form-control col-sm-4\" id=\"model\">";
                         for ($i=0; $i < $modelsLength; $i++) { 
                             print "<option value=\"{$models[$i]->id}\">{$models[$i]->Title}</option>";
                         }
@@ -230,18 +255,18 @@ PRODUCTS;
                     }
                     
                     print "</div>
-                    <div class=\"form-group\">
-                        <label for=\"price\">Цена</label>
-                        <input type=\"text\" class=\"form-control\" id=\"price\">
+                    <div class=\"form-group row\">
+                        <label for=\"price\" class='col-form-label col-sm-2'>Цена</label>
+                        <input type=\"text\" class=\"form-control col-sm-4\" id=\"price\">
                     </div>
-                    <div class=\"form-group\">
-                        <label for=\"car-body\">Кузов</label>";
+                    <div class=\"form-group row\">
+                        <label for=\"car-body\" class='col-form-label col-sm-2'>Кузов</label>";
                     require_once '../Classes/CarBody.php';
                     $carBody = new CarBody();
                     $carBodies = $carBody->ShowBodies();
                     $carBodiesLength = count($carBodies);
                     if ($carBodies) {
-                        print "<select class=\"form-control\" id=\"car-body\">";
+                        print "<select class=\"form-control col-sm-4\" id=\"car-body\">";
                         for ($i=0; $i < $carBodiesLength; $i++) { 
                             print "<option value=\"{$carBodies[$i]->id}\">{$carBodies[$i]->Type}</option>";
                         }
@@ -258,8 +283,9 @@ PRODUCTS;
                     $optionsLength = count($options);
                     if ($options) {
                         for ($i=0; $i < $optionsLength; $i++) { 
-                            print "<label>{$options[$i]->Title}</label>
-                                    <input type=\"checkbox\" value=\"{$options[$i]->id}\">";
+                            print "<label class='col-form-label'>{$options[$i]->Title}
+                                    <input type=\"checkbox\" value=\"{$options[$i]->id}\">
+                                    </label>";
                         }
                     } else {
                         echo("<div>Для добавления дополнительных опций в автомобильный ряд сначала добавьте данные опции в разделе <a href='options.php'><strong>Опции</strong></a></div>");
@@ -267,12 +293,6 @@ PRODUCTS;
                     
                     print "</div>
                     <button type=\"button\" id=\"btnSubmit\" class=\"btn btn-success\">Отправить</button>    
-                </form>
-            </div>
-            <div class=\"find-product-container\">                
-                <form method=\"GET\">
-                    <input class=\"form-control\" type=\"text\" id=\"product\" placeholder=\"Введите модель автомобиля\">
-                    <button id=\"btn-find-product\" class=\"btn btn-primary\">Найти</button>
                 </form>
             </div>
             <div>

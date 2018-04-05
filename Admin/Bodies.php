@@ -34,53 +34,55 @@ session_start();
         <title>Кузовы</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
     <body>
         <div class="container">
-            <div>
-                <button id="btn-open-create-body-container" class="btn btn-success">Добавить</button>
-                <a class="btn btn-default" href="admin.php">На главную</a>
+<div class="row">
+                <div class="col-3">
+                    <button id="btn-open-create-body-container" class="btn btn-success">Добавить</button>
+                    <a class="btn btn-default" href="admin.php">На главную</a>
+                </div>
+                <div class="find-body-container col">                
+                    <form method="GET" class="form-inline">
+                        <input class="form-control col-sm-5" type="text" id="body" placeholder="Введите название кузова" value="{$inputData}">
+                        <button id="btn-find-body" class="btn btn-primary col-form-label">Найти</button>
+                    </form>
+                </div>
             </div>
             <div class="form-group create-body-container">
                 <form method="POST">
-                    <div class="form-group">
-                        <label for="title">Кузов</label>
-                        <select id="title" class="form-control">    
+                    <div class="form-group row">
+                        <label for="title" class="col-ofrm-label col-sm-2">Кузов</label>
+                        <select id="title" class="form-control col-sm-4">    
                             <option value="купе">Купе</option>
                             <option value="хэтчбэк">Хэтчбек</option>
                             <option value="седан">Седан</option>
                         <select>
                     </div>
-                    <div class="form-group">
-                        <label for="oil">Топливо</label>
-                        <select id="oil" class="form-control">    
+                    <div class="form-group row">
+                        <label for="oil" class="col-form-label col-sm-2">Топливо</label>
+                        <select id="oil" class="form-control col-sm-4">    
                             <option value="АИ-92">АИ-92</option>
                             <option value="АИ-95">АИ-95</option>
                             <option value="ДТ">Дизель</option>                            
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="transmission">Коробка передач</label>
-                        <select id="transmission" class="form-control">    
+                    <div class="form-group row">
+                        <label for="transmission" class="col-form-label col-sm-2">Коробка передач</label>
+                        <select id="transmission" class="form-control col-sm-4">    
                             <option value="МКПП">Механическая</option>
                             <option value="АКПП">Автоматическая</option>
                         </select>
                     </div>
-                    <div>
-                        <label for="control">Привод</label>
-                        <select id="control" class="form-control">
+                    <div class="form-group row">
+                        <label for="control" class="col-label-form col-sm-2">Привод</label>
+                        <select id="control" class="form-control col-sm-4">
                             <option value="передний">Передний</option>
                             <option value="задний">Задний</option>
                         </select>
                     </div>
                     <button type="button" id="btnSubmit" class="btn btn-success">Отправить</button>    
-                </form>
-            </div>
-            <div class="find-body-container">                
-                <form method="GET">
-                    <input class="form-control" type="text" id="body" placeholder="Введите тип кузова">
-                    <button id="btn-find-body" class="btn btn-primary">Найти</button>
                 </form>
             </div>
             <h2>Кузовы</h2>
@@ -138,42 +140,50 @@ print <<<CARBODIES
         <title>Кузовы</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
     <body>
         <div class="container">
-            <div>
-                <button id="btn-open-create-body-container" class="btn btn-success">Добавить</button>
-                <a class="btn btn-default" href="admin.php">На главную</a>
+            <div class="row">
+                <div class="col-3">
+                    <button id="btn-open-create-body-container" class="btn btn-success">Добавить</button>
+                    <a class="btn btn-default" href="admin.php">На главную</a>
+                </div>
+                <div class="find-body-container col">                
+                    <form method="GET" class="form-inline">
+                        <input class="form-control col-sm-5" type="text" id="body" placeholder="Введите название кузова" value="">
+                        <button id="btn-find-body" class="btn btn-primary col-form-label">Найти</button>
+                    </form>
+                </div>
             </div>
             <div class="form-group create-body-container">
                 <form method="POST">
-                    <div class="form-group">
-                        <label for="title">Кузов</label>
-                        <select id="title" class="form-control">    
+                    <div class="form-group row">
+                        <label for="title" class="col-ofrm-label col-sm-2">Кузов</label>
+                        <select id="title" class="form-control col-sm-4">    
                             <option value="купе">Купе</option>
                             <option value="хэтчбэк">Хэтчбек</option>
                             <option value="седан">Седан</option>
                         <select>
                     </div>
-                    <div class="form-group">
-                        <label for="oil">Топливо</label>
-                        <select id="oil" class="form-control">    
+                    <div class="form-group row">
+                        <label for="oil" class="col-form-label col-sm-2">Топливо</label>
+                        <select id="oil" class="form-control col-sm-4">    
                             <option value="АИ-92">АИ-92</option>
                             <option value="АИ-95">АИ-95</option>
                             <option value="ДТ">Дизель</option>                            
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="transmission">Коробка передач</label>
-                        <select id="transmission" class="form-control">    
+                    <div class="form-group row">
+                        <label for="transmission" class="col-form-label col-sm-2">Коробка передач</label>
+                        <select id="transmission" class="form-control col-sm-4">    
                             <option value="МКПП">Механическая</option>
                             <option value="АКПП">Автоматическая</option>
                         </select>
                     </div>
-                    <div>
-                        <label for="control">Привод</label>
-                        <select id="control" class="form-control">
+                    <div class="form-group row">
+                        <label for="control" class="col-label-form col-sm-2">Привод</label>
+                        <select id="control" class="form-control col-sm-4">
                             <option value="передний">Передний</option>
                             <option value="задний">Задний</option>
                         </select>
@@ -181,12 +191,7 @@ print <<<CARBODIES
                     <button type="button" id="btnSubmit" class="btn btn-success">Отправить</button>    
                 </form>
             </div>
-            <div class="find-body-container">                
-                <form method="GET">
-                    <input class="form-control" type="text" id="body" placeholder="Введите тип кузова">
-                    <button id="btn-find-body" class="btn btn-primary">Найти</button>
-                </form>
-            </div>
+
             <h2>Кузовы</h2>
 CARBODIES;
                         require_once '../Classes/CarBody.php';

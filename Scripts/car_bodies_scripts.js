@@ -3,7 +3,7 @@ var btnEdit = $('.btn-warning'),
     btnSubmit = $('#btnSubmit'),
     btnFind = $('#btn-find-body');
 
-$('.create-body-container').css('display', 'none');
+$('.create-body-container').css({'display': 'none', 'margin-top': '20px'});
 
 $('#btn-open-create-body-container').click(function () { 
     $('.create-body-container').slideToggle();

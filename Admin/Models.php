@@ -36,25 +36,29 @@ session_start();
         <title>Модели</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
     <body>
         <div class="container">
-            <div>
-                <button id="btn-open-create-model-container" class="btn btn-success">Добавить</button>
-                <a class="btn btn-default" href="admin.php">На главную</a>
+            <div class="row">
+                <div class="col-3">
+                    <button id="btn-open-create-model-container" class="btn btn-success">Добавить</button>
+                    <a class="btn btn-default" href="admin.php">На главную</a>
+                </div>
+                <div class="find-model-container col">                
+                    <form method="GET" class="form-inline">
+                        <input class="form-control col-sm-5" type="text" id="model" placeholder="Введите название модели" value="{$inputData}">
+                        <button id="btn-find-model" class="btn btn-primary col-form-label">Найти</button>
+                    </form>
+                </div>
             </div>
             <div class="form-group create-model-container">
                 <form method="POST">
-                    <label for="title">Название опции</label>
-                    <input type="text" id="title" class="form-control">
-                    <button type="button" class="btn btn-success" id="btnSubmit">Отправить</button>  
-                </form>
-            </div>
-            <div class="find-model-container">                
-                <form method="GET">
-                    <input class="form-control" type="text" id="model" value="{$inputData}" placeholder="Введите название модели">
-                    <button id="btn-find-model" class="btn btn-primary">Найти</button>
+                    <div class="form-group row">
+                        <label for="title" class="col-sm-2 col-form-label">Название модели</label>
+                        <input type="text" id="title" value="" class="form-control col-sm-4">
+                    </div>
+                    <button type="button" class="btn btn-success" id="btnSubmit">Отправить</button>
                 </form>
             </div>
             <div>
@@ -104,25 +108,29 @@ print <<<MODELS
         <title>Модели</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
     </head>
     <body>
         <div class="container">
-            <div>
-                <button id="btn-open-create-model-container" class="btn btn-success">Добавить</button>
-                <a class="btn btn-default" href="admin.php">На главную</a>
+            <div class="row">
+                <div class="col-3">
+                    <button id="btn-open-create-model-container" class="btn btn-success">Добавить</button>
+                    <a class="btn btn-default" href="admin.php">На главную</a>
+                </div>
+                <div class="find-model-container col">                
+                    <form method="GET" class="form-inline">
+                        <input class="form-control col-sm-5" type="text" id="model" placeholder="Введите название модели" value="">
+                        <button id="btn-find-model" class="btn btn-primary col-form-label">Найти</button>
+                    </form>
+                </div>
             </div>
-            <div class="form-group create-model-container">            
+            <div class="form-group create-model-container">
                 <form method="POST">
-                    <label for="title">Название модели</label>
-                    <input type="text" id="title" value="" class="form-control">
+                    <div class="form-group row">
+                        <label for="title" class="col-sm-2 col-form-label">Название модели</label>
+                        <input type="text" id="title" value="" class="form-control col-sm-4">
+                    </div>
                     <button type="button" class="btn btn-success" id="btnSubmit">Отправить</button>
-                </form>
-            </div>
-            <div class="find-model-container">                
-                <form method="GET">
-                    <input class="form-control" type="text" id="model" placeholder="Введите название модели">
-                    <button id="btn-find-model" class="btn btn-primary">Найти</button>
                 </form>
             </div>
             <div>
